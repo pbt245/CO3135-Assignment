@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/kaggle/input/datasets/bathanhphan/p4aids-code/scripts/04_test_and_analysis.py", line 26, in <module>
+    from src import config as C, data, features as F, models as M, evaluation as E, plotting as P
+  File "/kaggle/input/datasets/bathanhphan/p4aids-code/src/config.py", line 93, in <module>
+    RAW_DIR = _find_raw_dir()
+  File "/kaggle/input/datasets/bathanhphan/p4aids-code/src/config.py", line 87, in _find_raw_dir
+    raise FileNotFoundError("Attach the Kaggle dataset "
+                            "nicholasjhana/energy-consumption-generation-prices-and-weather")
+FileNotFoundError: Attach the Kaggle dataset nicholasjhana/energy-consumption-generation-prices-and-weather
