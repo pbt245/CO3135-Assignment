@@ -1,0 +1,18 @@
+% =====================================================================
+%  3.7 Model explanation
+% =====================================================================
+\subsection{Model Explanation}
+\label{sec:explanation}
+
+We explain M1 with TreeSHAP values from LightGBM's built-in \code{pred\_contrib}~\cite{lundberg2017unified}.
+Lags, temperature, month and hour are correlated, and TreeSHAP handles such dependence only
+partly~\cite{aas2021explaining}. We therefore sum SHAP values within four groups (load lags,
+calendar, holidays, weather) and read them as ``what the model uses'', not as causal
+effects~\cite{chen2020true}. We report:
+\begin{itemize}
+  \item mean $|\text{SHAP}|$ per group, overall and by month;
+  \item the SHAP value of the weather group against temperature, at night and at midday, to see
+        whether LightGBM learns the U-shape that Ridge receives through degree days.
+\end{itemize}
+If the change target is chosen, the SHAP values explain the predicted change since last week, not
+the load level. Results are in \cref{sec:eval-shap}.

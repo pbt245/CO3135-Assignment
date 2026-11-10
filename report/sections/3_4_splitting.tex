@@ -1,0 +1,33 @@
+% =====================================================================
+%  3.4 Data splitting
+% =====================================================================
+\subsection{Data Splitting}
+\label{sec:splitting}
+
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Chronological split. Random splits would leak future information into training.}
+  \label{tab:split}
+  \begin{tabularx}{\linewidth}{@{}l l r Y@{}}
+    \toprule
+    Set & Period & Usable hours & Why \\
+    \midrule
+    Train & 2015-01-08 -- 2016-12-31 & 17{,}332 & Two winters and two summers; the first week has no
+      $y_{D-7,h}$. \\
+    Validation & 2017 & 8{,}757 & A full year, so every season counts when choosing
+      hyper-parameters. \\
+    Test & 2018 & \todo{n} & Touched once, after the configuration is frozen. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+All hyper-parameters are chosen on validation with models fitted on 2015--2016. For the test, each
+model is refitted \emph{once} on 2015--2017 with the frozen hyper-parameters and predicts all of
+2018. This repeats the validation protocol (fit on earlier years, forecast the next full year), so
+validation and test errors are comparable. Both weather settings use exactly the same rows, so all
+models are scored on the same hours.
+
+Two safeguards protect the test year. First, the development scripts never load 2018. Second, the
+test script asserts that adding 2018 changes no feature of any earlier row, and it refuses to run
+if the frozen parameters come from a smoke run or if the test has already been run.

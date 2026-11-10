@@ -1,0 +1,68 @@
+% =====================================================================
+%  Programming for AI & Data Science - Semester 261
+%  Assignment report: day-ahead electricity load forecasting for Spain
+%  Compiles with pdfLaTeX (needs the vntex package, available on Overleaf)
+%  or with XeLaTeX / LuaLaTeX.
+%  Red "TODO" boxes mark parts that are not done yet (search for \todo).
+% =====================================================================
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[utf8]{inputenc}
+  \usepackage[T5]{fontenc}       % Vietnamese diacritics in member names
+  \usepackage{lmodern}
+\else
+  \usepackage{fontspec}
+\fi
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools,bm}
+\usepackage{booktabs,tabularx,array,multirow}
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage[capitalise,noabbrev]{cleveref}
+
+\setcounter{secnumdepth}{3}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+% ---------- notation and helpers --------------------------------------
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{[TODO:} #1\textbf{]}}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\HDD}{\mathrm{HDD}}
+\newcommand{\CDD}{\mathrm{CDD}}
+\newcommand{\MAE}{\mathrm{MAE}}
+
+\begin{document}
+\input{sections/cover}
+\tableofcontents
+\clearpage
+
+\input{sections/1_problem_definition}
+\input{sections/2_literature_review}
+
+\section{Algorithm Implementation}
+\label{sec:implementation}
+\input{sections/3_1_preprocessing}
+\input{sections/3_2_eda}
+\input{sections/3_3_features}
+\input{sections/3_4_splitting}
+\input{sections/3_5_models}
+\input{sections/3_6_tuning}
+\input{sections/3_7_explanation}
+
+\input{sections/4_evaluation}
+\input{sections/5_discussion}
+
+\input{sections/declarations}
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

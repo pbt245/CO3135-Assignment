@@ -1,0 +1,143 @@
+% =====================================================================
+%  4. Evaluation
+% =====================================================================
+\section{Evaluation}
+\label{sec:evaluation}
+
+\subsection{Protocol}
+\label{sec:protocol}
+
+\paragraph{Metrics.} MAE in MW is the main metric because it has a physical unit. RMSE stresses
+large errors. MAPE is reported only for comparison with the literature, and is safe here because load
+never approaches zero~\cite{hyndman2021fpp3}. We also report the bias (mean of prediction minus
+actual).
+
+\paragraph{Paired comparison.} For models A and B, let $\Delta=\MAE_A-\MAE_B$ (negative means A is
+better). Errors of neighbouring hours are strongly autocorrelated, so we resample whole calendar
+weeks (2{,}000 block-bootstrap samples~\cite{kunsch1989jackknife}) of the paired differences
+$|e_A|-|e_B|$ and take the 95\% percentile interval. With a threshold $\delta$ equal to 2\% of the MAE
+of the simpler model of the pair (a heuristic fixed before running the test), the verdict is:
+\begin{itemize}
+  \item \textbf{clearly better}: the interval excludes 0 and $|\Delta|\ge\delta$;
+  \item \textbf{about equal}: the interval lies inside $[-\delta,+\delta]$;
+  \item \textbf{undecided}: otherwise.
+\end{itemize}
+We also count in how many calendar months A beats B, to see whether a gain is broad or comes from a
+few weeks.
+
+\paragraph{TSO reference.} The TSO forecast is shown for context only. The TSO has internal data and
+weather forecasts, and we do not know exactly when the column was last updated. We therefore do not
+claim to beat or lose to it.
+
+\subsection{Validation Results (2017)}
+\label{sec:eval-val}
+
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Validation 2017, 8{,}757 hours. Mean load 28{,}858\,MW.}
+  \label{tab:val}
+  \begin{tabular}{@{}l l r r r r@{}}
+    \toprule
+    Model & Weather & MAE & RMSE & MAPE (\%) & Bias \\
+    \midrule
+    B0 seasonal naive & -- & 2{,}627 & 3{,}748 & 9.20 & $-2$ \\
+    B1 Ridge & actual & 1{,}840 & 2{,}562 & 6.38 & $-358$ \\
+    B1 Ridge & lagged & 1{,}859 & 2{,}594 & 6.44 & $-378$ \\
+    M1 LightGBM & actual & 1{,}591 & 2{,}350 & 5.56 & $-316$ \\
+    M1 LightGBM & lagged & 1{,}683 & 2{,}438 & 5.89 & $-266$ \\
+    \midrule
+    TSO (reference) & -- & 314 & 430 & 1.08 & 2 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Paired comparisons on validation ($\Delta$ in MW, 95\% block-bootstrap interval).}
+  \label{tab:val-pairs}
+  \begin{tabular}{@{}l l r c c l@{}}
+    \toprule
+    A & B & $\Delta$ & 95\% interval & Months A better & Verdict \\
+    \midrule
+    B1 actual & B0 & $-787$ & $[-1045,\,-512]$ & 12/12 & clearly better \\
+    B1 lagged & B0 & $-768$ & $[-1036,\,-482]$ & 12/12 & clearly better \\
+    B1 actual & B1 lagged & $-19$ & $[-54,\,17]$ & 8/12 & undecided \\
+    M1 actual & B1 actual & $-249$ & $[-354,\,-134]$ & 12/12 & clearly better \\
+    M1 lagged & B1 lagged & $-175$ & $[-275,\,-71]$ & 10/12 & clearly better \\
+    M1 actual & M1 lagged & $-93$ & $[-153,\,-31]$ & 12/12 & clearly better \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+On validation, features plus a linear model remove about 30\% of the seasonal-naive error, in every
+month. LightGBM removes a further 9--14\% of the Ridge error. Knowing the actual weather helps
+LightGBM by 93\,MW but Ridge by only 19\,MW, which is not distinguishable from zero. A possible
+reading is that the trees use same-day temperature in a way the degree-day form does not, but this
+is not shown yet (\cref{sec:eval-why}).
+
+\paragraph{Resolution.} The half-width of the intervals is 100--110\,MW for M1 versus B1 and
+35--60\,MW for actual versus lagged, against thresholds $\delta$ of about 34--37\,MW. Differences
+smaller than roughly 100\,MW between models therefore end up ``undecided''. We keep $\delta$
+unchanged and state this limit.
+
+\paragraph{Loss versus metric.} Both models train on squared error but are scored by MAE. Removing
+the median residual would lower the MAE by 30--50\,MW for both models (e.g.\ 1{,}840 to 1{,}791 for
+B1 actual, 1{,}591 to 1{,}554 for M1 actual), so the mismatch affects both models by a similar
+amount. This is only a diagnostic; predictions are not corrected.
+
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Validation MAE (MW) by day type. Bold: best of B1/M1 in each weather setting.}
+  \label{tab:val-daytype}
+  \begin{tabular}{@{}l r r r r r r r@{}}
+    \toprule
+    Day type & Hours & B0 & B1 actual & M1 actual & B1 lagged & M1 lagged & TSO \\
+    \midrule
+    Workday & 5{,}950 & 2{,}583 & 1{,}778 & \textbf{1{,}453} & 1{,}802 & \textbf{1{,}553} & 307 \\
+    Saturday & 1{,}248 & 2{,}230 & 1{,}606 & \textbf{1{,}541} & 1{,}662 & \textbf{1{,}615} & 316 \\
+    Sunday & 1{,}271 & 2{,}974 & 2{,}194 & \textbf{1{,}955} & 2{,}152 & \textbf{2{,}089} & 308 \\
+    Holiday & 240 & 4{,}193 & \textbf{2{,}957} & 3{,}451 & \textbf{2{,}984} & 3{,}278 & 466 \\
+    Bridge day & 48 & 1{,}439 & \textbf{574} & 1{,}082 & \textbf{634} & 916 & 518 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+LightGBM wins on ordinary days but loses to Ridge on holidays and bridge days
+(\cref{tab:val-daytype}). These days are rare (288 hours in the validation year and similarly few in
+training), so the trees see few examples. Ridge treats the holiday share as one linear shift per hour,
+which generalises from few examples. This will be checked on the test year.
+
+The largest bias is in June 2017 ($-1{,}643$\,MW for B1 actual, $-956$\,MW for M1 actual), the month
+of a record heat wave: June load was about 2{,}000\,MW above the June level of the two training
+years. With only two training summers, the models had not seen such heat in June. We did not add
+features to fix this after seeing the validation year, since that would overfit validation.
+
+\subsection{Test Results (2018)}
+\label{sec:eval-test}
+
+\todo{run \code{scripts/04\_test\_and\_analysis.py} once, after the methodology audit. Fill in:
+(1) main table B0, B1, M1 in both settings with the TSO reference and the validation-to-test change;
+(2) paired comparisons with verdicts (\code{results/test\_comparison.csv});
+(3) MAE by month, hour, day type and temperature band (\code{04\_test\_*} figures);
+(4) number of test hours outside the training range of temperature and load.}
+
+\subsection{Why Models Win or Lose}
+\label{sec:eval-why}
+
+\todo{use the gain breakdown $|e_{M1}|-|e_{B1}|$ by day type, temperature band and month, and the
+ten best and worst days for LightGBM. Answer: where does LightGBM gain (cold/hot hours? workdays?)
+and where does it lose (holidays, bridge days?). If no group explains the difference, write ``mechanism
+unclear'' instead of ``trees are inherently better''. On the dry run (validation, 3 Optuna trials
+only, \emph{not} a result) LightGBM gained on cold and hot hours and lost on holidays and bridge
+days; check whether this holds on the test year.}
+
+\subsection{Model Explanation Results}
+\label{sec:eval-shap}
+
+\todo{grouped SHAP bar chart (\code{04\_test\_shap\_groups.png}), SHAP by month, and the weather SHAP
+against temperature (\code{04\_test\_shap\_temperature.png}). State which target was chosen and what the
+SHAP values therefore explain. Compare the learned temperature response with the V-shape at
+18\,$^\circ$C chosen for Ridge.}

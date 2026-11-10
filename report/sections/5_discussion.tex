@@ -1,0 +1,78 @@
+% =====================================================================
+%  5. Discussion and future work
+% =====================================================================
+\section{Discussion and Future Work}
+\label{sec:discussion}
+
+\subsection{Discussion}
+\label{sec:disc}
+
+\todo{answer Q1--Q3 (\cref{sec:questions}) with the test verdicts, in MW and \% of mean load.
+Suggested structure: (1) value of feature engineering (B1 vs.\ B0); (2) value of a non-linear model
+(M1 vs.\ B1), and where it comes from; (3) value of knowing actual weather; (4) what this means for a
+public-data analyst: where to spend effort.}
+
+What we can already say from the development data (validation 2017, before the test):
+\begin{itemize}
+  \item Lags, calendar and holiday features with a linear model clearly beat seasonal naive in every
+        month of the validation year.
+  \item LightGBM clearly beats Ridge in both weather settings, by 175--249\,MW. The gain comes from
+        ordinary days; on holidays and bridge days Ridge is better.
+  \item Actual weather is worth little to Ridge (undecided) but about 93\,MW to LightGBM. The
+        within-month temperature effect on the training years is weak and unstable
+        (\cref{tab:s2}). This should be read as ``little \emph{extra} information beyond lags and
+        season'', not as ``temperature does not matter''.
+  \item Holidays and unusual weather (June 2017) cause the largest errors.
+\end{itemize}
+
+\subsection{Limitations}
+\label{sec:limitations}
+
+\begin{itemize}
+  \item \textbf{No weather forecasts.} Only an optimistic (actual) and a pessimistic (lagged) bound
+        can be measured; operational performance lies in between.
+  \item \textbf{Few seasons.} Training covers two summers when tuning and three when testing. The
+        June 2017 heat wave shows that unseen extremes cause large bias, especially for trees, which
+        cannot extrapolate.
+  \item \textbf{Weather quality.} A simple five-city mean, no population weights; the origin of the
+        weather data is not documented.
+  \item \textbf{Holidays.} Regional holidays are only captured as an unweighted share of regions.
+  \item \textbf{One test year,} one refit per year (the model may age during 2018), heuristic
+        thresholds ($\delta$, spike rule, grids).
+  \item \textbf{Actual load} may have been revised after publication; the TSO column's information
+        time is unknown.
+  \item All relations are statistical associations, not causal effects.
+\end{itemize}
+
+\subsection{Future Work}
+\label{sec:future}
+
+Items are ordered by expected value for the questions of this report. Status is updated as work
+progresses.
+
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Planned extensions (not done yet unless marked).}
+  \label{tab:future}
+  \begin{tabularx}{\linewidth}{@{}l Y l@{}}
+    \toprule
+    ID & Extension & Status \\
+    \midrule
+    F1 & Monthly refit on the test year (rolling origin) instead of one refit per year. & \todo{} \\
+    F2 & Population-weighted temperature, or degree days per city before averaging. & \todo{} \\
+    F3 & Diebold--Mariano test as a cross-check of the block bootstrap. & \todo{} \\
+    F4 & Ridge without load lags (2$\times$2: with/without lags $\times$ with/without temperature) to
+         see how much temperature information the lags absorb. & \todo{} \\
+    F5 & Error breakdown with and without special days, to compare with studies that exclude
+         them~\cite{incremona2021italian,dudek2021ensembles}. & \todo{} \\
+    F6 & Cubic temperature terms and temperature $\times$ month for Ridge (is Ridge limited by its
+         functional form?). & \todo{} \\
+    F7 & Humidity as an extra weather variable (actual setting only). & \todo{} \\
+    F8 & Similar-day (pattern-based) baseline~\cite{dudek2021ensembles}. & \todo{} \\
+    F9 & Sensitivity to an earlier issue time ($D-2$) for both load and weather. & \todo{} \\
+    F10 & A deep model (MLP or LSTM) under the same protocol, if the scope allows. & \todo{} \\
+    F11 & Probabilistic forecasts (quantile LightGBM) for operational use. & \todo{} \\
+    \bottomrule
+  \end{tabularx}
+\end{table}

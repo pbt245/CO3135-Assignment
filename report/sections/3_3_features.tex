@@ -1,0 +1,47 @@
+% =====================================================================
+%  3.3 Feature engineering
+% =====================================================================
+\subsection{Feature Engineering}
+\label{sec:features}
+
+Every feature of target hour $(D,h)$ uses only information available at 10:00 on $D-1$. The only
+exception is the temperature of day $D$ in the \emph{actual} setting, which is allowed on purpose
+(\cref{sec:weather-settings}). \Cref{tab:features} lists the features (\code{src/features.py}).
+
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Features. Load lags are looked up by local date and hour, never by a shift in rows.}
+  \label{tab:features}
+  \begin{tabularx}{\linewidth}{@{}l p{4.6cm} Y@{}}
+    \toprule
+    Group & Feature & Why \\
+    \midrule
+    Load lags & $y_{D-2,h}$, $y_{D-7,h}$
+      & Daily and weekly cycle; $D-2$ is the newest known value of the same hour. \\
+      & $y_{D-1,08}$
+      & Newest known hour: tells the current level after a sudden change (cold spell, start of a
+        holiday). \\
+      & mean($y_{D-1,0..8}$) / mean($y_{D-2,0..8}$) & Is the level rising or falling? \\
+    Calendar & hour, weekday, month, $\sin$/$\cos$ of day of year & Daily, weekly, yearly cycles. \\
+    Holidays & national flag; share of the 17 regions on holiday; bridge day; Dec 24--Jan 6 window
+      & Holidays are where seasonal lags fail most. The regional share also captures days such as
+        Holy Thursday (0.94). \\
+      & regional share on $D-1$, $D-2$, $D-7$ & A lag taken from a holiday is a bad reference. \\
+    Weather (actual) & $T_t$, mean of the last 24\,h & Current temperature and thermal inertia of
+      buildings. \\
+    Weather (lagged) & $T_{D-1,08}$, 24\,h mean ending at $D-1$ 08:00, $T_{D-2,h}$
+      & Newest weather known at issue time. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Holidays come from the \code{holidays} package~\cite{holidays_python}, stored once as a CSV so that the
+features do not depend on the package version. Ridge additionally receives degree days instead of
+raw temperature (\cref{sec:models}); LightGBM receives raw temperature.
+
+\paragraph{Automatic leakage test.}
+For random days $D$, we replace \emph{all} load and temperature values after 08:00 on $D-1$ with
+random noise, rebuild the features and assert that the features of day $D$ do not change. In the
+\emph{actual} setting, only the temperature features of day $D$ are exempt. Over 8 random days per
+setting the maximum change is exactly 0.

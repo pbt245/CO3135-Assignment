@@ -1,0 +1,39 @@
+% =====================================================================
+%  3.5 Models
+% =====================================================================
+\subsection{Models}
+\label{sec:models}
+
+All models receive the same cleaned data and the same information for a given weather setting
+(\code{src/models.py}).
+
+\paragraph{B0: seasonal naive.} $\hat y_{D,h}=y_{D-7,h}$. It captures the daily and weekly cycle
+for free. It is the floor every model must beat, not the main opponent.
+
+\paragraph{B1: per-hour Ridge with degree days.}
+Ridge regression~\cite{hoerl1970ridge} with standardised inputs (scaler fitted on training rows
+only). Temperature enters through heating and cooling degree days
+\begin{equation}
+  \HDD(T)=\max(T_h-T,\,0), \qquad \CDD(T)=\max(T-T_c,\,0),
+  \label{eq:degree-days}
+\end{equation}
+computed for each temperature feature, with separate bases $T_h\le T_c$ so that a flat comfort zone
+is allowed. Weekday and month are one-hot encoded. We fit 24 separate models, one per local hour,
+with a shared $\alpha$ and shared bases. With one shared $\alpha$, this is equivalent to a single Ridge
+in which every feature interacts with the hour. It is the simplest way to let the effect of
+temperature, weekday and lags differ between, for example, the 08:00 heating peak and the 15:00
+cooling peak. We do \emph{not} interpret Ridge coefficients as ``MW per $^\circ$C'': they are shrunk
+and shared between correlated features. Explanation uses SHAP on LightGBM instead.
+
+\paragraph{M1: LightGBM.}
+Gradient-boosted trees~\cite{ke2017lightgbm} with one \emph{global} model for all 24 hours, hour
+being a feature. Each hour has only about 730 training days, and trees need many samples per leaf.
+A global model can still split on the hour when the data support it. LightGBM receives raw
+temperatures, since trees are invariant to monotone transforms and find thresholds themselves. Both
+B1 and M1 minimise squared error, so the comparison is about the function class, not the loss.
+
+\paragraph{Target option.}
+The first validation run showed a bias of $-1.3\%$ of mean load in 2017. Our plan, written
+before seeing any result, stated that a bias of at least 1\% triggers a second target option. Both
+B1 and M1 can therefore predict either the level $y_{D,h}$ or the change since last week
+$y_{D,h}-y_{D-7,h}$, and the choice is made on validation like any other hyper-parameter.

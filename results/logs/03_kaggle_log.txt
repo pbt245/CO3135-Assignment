@@ -1,0 +1,50 @@
+ROOT: /kaggle/input/datasets/bathanhphan/p4aids-code | Kaggle: True | smoke: False | output: /kaggle/working | lightgbm 4.6.0 | optuna 5.0.0
+ridge_actual <- /kaggle/input/datasets/bathanhphan/p4aids-code/results/frozen/ridge_actual.json
+ridge_lagged <- /kaggle/input/datasets/bathanhphan/p4aids-code/results/frozen/ridge_lagged.json
+
+==============================================================================
+1. Optuna: 30 trials per weather setting
+==============================================================================
+actual: 30 trials in 239s, best val MAE 1590.8
+lagged: 30 trials in 202s, best val MAE 1683.4
+
+--- best trial per setting ---
+                   actual   lagged
+num_leaves            171       70
+min_data_in_leaf       13       11
+feature_fraction     0.62     0.55
+lambda_l2            0.00     0.46
+target              level    level
+num_rounds           1006     2153
+val_mae          1,590.80 1,683.38
+
+==============================================================================
+2. Validation comparison (test not touched)
+==============================================================================
+
+--- validation 2017 metrics ---
+               MAE     RMSE  MAPE_%    bias        n
+B0        2,626.92 3,747.92    9.20   -2.10 8,757.00
+B1_actual 1,839.52 2,562.08    6.38 -357.56 8,757.00
+M1_actual 1,590.80 2,350.19    5.56 -316.44 8,757.00
+B1_lagged 1,858.75 2,594.28    6.44 -377.77 8,757.00
+M1_lagged 1,683.38 2,437.97    5.89 -265.76 8,757.00
+TSO         314.13   430.14    1.08    2.31 8,757.00
+
+--- paired comparison on validation ---
+           A          B    MAE_A    MAE_B   delta    ci_low  ci_high  threshold_MW  ci_halfwidth_MW months_A_better           verdict
+0  B1_actual         B0 1,839.52 2,626.92 -787.39 -1,045.02  -511.57         52.54           266.73           12/12  A clearly better
+1  M1_actual  B1_actual 1,590.80 1,839.52 -248.73   -354.01  -134.12         36.79           109.94           12/12  A clearly better
+2  B1_lagged         B0 1,858.75 2,626.92 -768.17 -1,036.24  -481.52         52.54           277.36           12/12  A clearly better
+3  M1_lagged  B1_lagged 1,683.38 1,858.75 -175.37   -274.82   -71.23         37.17           101.79           10/12  A clearly better
+4  B1_actual  B1_lagged 1,839.52 1,858.75  -19.23    -54.22    16.88         37.17            35.55            8/12         undecided
+5  M1_actual  M1_lagged 1,590.80 1,683.38  -92.58   -152.88   -30.74         33.67            61.07           12/12  A clearly better
+
+--- residual skew diagnostic (L2 training vs MAE scoring) ---
+       model  mean_resid  median_resid  skew      MAE  MAE_if_median_removed
+0  B1_actual      357.56        430.05 -0.36 1,839.52               1,791.12
+1  M1_actual      316.44        328.26 -0.06 1,590.80               1,553.71
+2  B1_lagged      377.77        430.18 -0.37 1,858.75               1,812.69
+3  M1_lagged      265.76        305.47 -0.23 1,683.38               1,654.78
+
+frozen: ['lgbm_actual.json', 'lgbm_lagged.json']

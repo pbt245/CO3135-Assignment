@@ -1,0 +1,17 @@
+{
+  "weather_rows_raw": 178396,
+  "weather_dup_rows_removed": 3076,
+  "weather_conflicting_dups": 0,
+  "hours_utc": 26304,
+  "y_nan_raw": 34,
+  "spikes": [
+    "2015-03-26 09:00:00+01:00",
+    "2015-08-26 19:00:00+02:00",
+    "2016-04-25 02:00:00+02:00"
+  ],
+  "dst_gap_rows": 3,
+  "y_nan_after_clean": 40,
+  "y_src_nan_after_ffill": 8,
+  "first_ts": "2015-01-01 00:00:00",
+  "last_ts": "2017-12-31 23:00:00"
+}

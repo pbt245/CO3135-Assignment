@@ -1,0 +1,71 @@
+% =====================================================================
+%  1. Problem Definition
+% =====================================================================
+\section{Problem Definition}
+\label{sec:problem}
+
+\subsection{Task}
+\label{sec:task}
+
+We forecast the hourly electricity load of Spain one day ahead. At 10:00 local time on day $D-1$,
+two hours before the 12:00 gate closure of the day-ahead market, the model outputs 24 values
+$\hat y_{D,0},\dots,\hat y_{D,23}$ (MW), one for each local hour of day $D$. Only information
+published before 10:00 on $D-1$ may be used. The newest load hour that is surely available at that
+time is the hour stamped 08:00 on $D-1$. The most recent \emph{same-hour} load value is therefore
+two days old ($D-2$), not one.
+
+\subsection{Who needs it and what we ask}
+\label{sec:questions}
+
+The dataset already contains the forecast of the transmission system operator (TSO). If a user only
+needs a number, the TSO column is the right choice, and our model does not try to replace it.
+Our target user is an analyst who only has public data and wants an open, explainable model. Such a
+user needs to know where to spend effort: on feature engineering, on a more complex model, or on
+obtaining weather forecasts. We therefore ask three questions:
+\begin{enumerate}[label=\textbf{Q\arabic*}, leftmargin=*]
+  \item How much error do lag, calendar, holiday and temperature features remove, using a linear model
+        (B1 Ridge versus the seasonal-naive B0)?
+  \item Does a non-linear model (M1 LightGBM) add accuracy once these features exist (M1 versus B1)?
+  \item How much is knowing the actual weather of day $D$ worth, compared with only past weather?
+\end{enumerate}
+
+\subsection{Dataset}
+\label{sec:dataset}
+
+We use the Kaggle dataset ``Hourly energy demand generation and weather''~\cite{jhana2019energy}.
+It joins ENTSO-E load and generation data with hourly weather of five Spanish cities
+(\cref{tab:dataset}).
+
+\begin{table}[H]
+  \centering
+  \small
+  \caption{The two files of the dataset and what we use from them.}
+  \label{tab:dataset}
+  \begin{tabularx}{\linewidth}{@{}l l Y@{}}
+    \toprule
+    File & Size & Used columns \\
+    \midrule
+    \code{energy\_dataset.csv} & 35{,}064 hourly rows, 2015--2018, 29 columns
+      & \code{total load actual} (target); \code{total load forecast} (TSO forecast, reference only).
+        Generation and price columns are dropped because they are simultaneous with the target or
+        published after the 10:00 cutoff. \\
+    \code{weather\_features.csv} & 178{,}396 rows, 5 cities, 17 columns
+      & \code{temp} of Madrid, Barcelona, Valencia, Seville and Bilbao. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Two weather settings}
+\label{sec:weather-settings}
+
+The dataset has observed weather but no weather \emph{forecasts}. We therefore run every model in
+two settings and never mix them inside one comparison:
+\begin{itemize}
+  \item \textbf{actual}: the observed temperature of day $D$ is used, as if a perfect weather
+        forecast were available. This gives an optimistic bound.
+  \item \textbf{lagged}: only weather observed up to 08:00 on $D-1$ is used. This is a genuine
+        ex-ante forecast with lagged predictors~\cite{hyndman2021fpp3} and needs no weather feed.
+        It gives a pessimistic bound.
+\end{itemize}
+Performance with a real weather forecast lies between the two bounds, but it cannot be measured with
+this dataset.

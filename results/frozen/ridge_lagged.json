@@ -1,0 +1,11 @@
+{
+  "mode": "lagged",
+  "target": "delta7",
+  "th": 18.0,
+  "tc": 18.0,
+  "alpha": 10.0,
+  "val_mae": 1858.7490271990805,
+  "th_on_grid_edge": false,
+  "tc_on_grid_edge": false,
+  "alpha_on_grid_edge": false
+}
