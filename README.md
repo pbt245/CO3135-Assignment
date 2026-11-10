@@ -2,7 +2,6 @@
 
 Assignment môn Programming for AI & Data Science. Dự báo 24 giờ phụ tải ngày D, phát hành lúc 10:00 ngày D-1.
 So sánh B0 seasonal naive, B1 Ridge theo giờ (có feature engineering) và M1 LightGBM + Optuna; giải thích bằng SHAP.
-Thiết kế: `debate/pipeline-v1.md`, `decisions.md`.
 
 ## Cấu trúc
 
