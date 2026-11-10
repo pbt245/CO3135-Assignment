@@ -7,23 +7,32 @@
 \subsection{Discussion}
 \label{sec:disc}
 
-\todo{answer Q1--Q3 (\cref{sec:questions}) with the test verdicts, in MW and \% of mean load.
-Suggested structure: (1) value of feature engineering (B1 vs.\ B0); (2) value of a non-linear model
-(M1 vs.\ B1), and where it comes from; (3) value of knowing actual weather; (4) what this means for a
-public-data analyst: where to spend effort.}
+All answers below come from the single test run on 2018 and agree with validation 2017.
 
-What we can already say from the development data (validation 2017, before the test):
-\begin{itemize}
-  \item Lags, calendar and holiday features with a linear model clearly beat seasonal naive in every
-        month of the validation year.
-  \item LightGBM clearly beats Ridge in both weather settings, by 175--249\,MW. The gain comes from
-        ordinary days; on holidays and bridge days Ridge is better.
-  \item Actual weather is worth little to Ridge (undecided) but about 93\,MW to LightGBM. The
-        within-month temperature effect on the training years is weak and unstable
-        (\cref{tab:s2}). This should be read as ``little \emph{extra} information beyond lags and
-        season'', not as ``temperature does not matter''.
-  \item Holidays and unusual weather (June 2017) cause the largest errors.
-\end{itemize}
+\paragraph{Q1: feature engineering with a linear model.} Ridge with lags, calendar, holiday and
+degree-day features removes about a third of the seasonal-naive error (880\,MW, 3.0\% of mean load) in
+every month of the test year. This is by far the largest single gain in the study.
+
+\paragraph{Q2: a non-linear model.} LightGBM removes a further 13\% of the Ridge error with actual
+weather (231\,MW) and 10\% with lagged weather (168\,MW), winning in 10--11 of 12 months. The gain is
+concentrated in cold and hot hours and in winter months, i.e.\ where the response to temperature
+and its interaction with calendar matter most. Ridge stays better on bridge days, and LightGBM lost
+September 2018, a month with unusual recorded load.
+
+\paragraph{Q3: knowing the actual weather.} With perfect knowledge of the day's temperature,
+LightGBM improves by 71\,MW (0.25\% of load); Ridge does not improve measurably. This is an upper
+bound for the value of weather forecasts in this set-up, and it is smaller than the gain from
+changing the model. It agrees with the weak within-month temperature effect found on the training
+years (\cref{tab:s2}): once lags and calendar are present, temperature adds little extra information.
+This does not mean temperature is unimportant; much of its effect is already carried by the season
+and by recent load.
+
+\paragraph{What this means for a public-data analyst.} Spend effort first on features (lags at the
+right information time, calendar, holidays), then on a flexible model; a weather-forecast feed comes
+last for a national day-ahead forecast of this kind. Holidays and bridge days remain the weakest
+point of every model and are the most promising place for further work. The TSO forecast is still
+far more accurate (268\,MW), so a public-data model is useful for understanding and analysis, not as
+a replacement.
 
 \subsection{Limitations}
 \label{sec:limitations}
@@ -83,6 +92,10 @@ progresses.
     F9 & Sensitivity to an earlier issue time ($D-2$) for both load and weather. & \todo{} \\
     F10 & A deep model (MLP or LSTM) under the same protocol, if the scope allows. & \todo{} \\
     F11 & Probabilistic forecasts (quantile LightGBM) for operational use. & \todo{} \\
+    F12 & Better bridge-day handling (e.g.\ a bridge $\times$ hour interaction, or using the previous
+          year's bridge days), the weakest point of LightGBM in both years. & \todo{} \\
+    F13 & Check the unusual load of September 2018 against the original ENTSO-E data (real events
+          or date misalignment?). & \todo{} \\
     \bottomrule
   \end{tabularx}
 \end{table}

@@ -1,0 +1,94 @@
+{
+  "run": "test",
+  "started": "2026-11-10T17:16:58",
+  "finished": "2026-11-10T17:22:45",
+  "rerun_reason": null,
+  "frozen": {
+    "ridge_actual": {
+      "mode": "actual",
+      "target": "delta7",
+      "th": 18.0,
+      "tc": 18.0,
+      "alpha": 31.622776601683793,
+      "val_mae": 1839.5218879547497,
+      "th_on_grid_edge": false,
+      "tc_on_grid_edge": false,
+      "alpha_on_grid_edge": false
+    },
+    "ridge_lagged": {
+      "mode": "lagged",
+      "target": "delta7",
+      "th": 18.0,
+      "tc": 18.0,
+      "alpha": 10.0,
+      "val_mae": 1858.7490271990805,
+      "th_on_grid_edge": false,
+      "tc_on_grid_edge": false,
+      "alpha_on_grid_edge": false
+    },
+    "lgbm_actual": {
+      "mode": "actual",
+      "target": "level",
+      "lgb_params": {
+        "num_leaves": 171,
+        "min_data_in_leaf": 13,
+        "feature_fraction": 0.6242084256803789,
+        "lambda_l2": 0.002087292125321222
+      },
+      "num_rounds": 1006,
+      "val_mae": 1590.7952149429711,
+      "n_trials": 30,
+      "smoke": false,
+      "versions": {
+        "lightgbm": "4.6.0",
+        "optuna": "5.0.0"
+      }
+    },
+    "lgbm_lagged": {
+      "mode": "lagged",
+      "target": "level",
+      "lgb_params": {
+        "num_leaves": 70,
+        "min_data_in_leaf": 11,
+        "feature_fraction": 0.5463821792108021,
+        "lambda_l2": 0.4589685927545115
+      },
+      "num_rounds": 2153,
+      "val_mae": 1683.3787333093642,
+      "n_trials": 30,
+      "smoke": false,
+      "versions": {
+        "lightgbm": "4.6.0",
+        "optuna": "5.0.0"
+      }
+    }
+  },
+  "frozen_sha256": {
+    "ridge_actual": "999ba364a15991dba399ebcc0db6796c84b6d7166d44f430f9c239361ba6ee9e",
+    "ridge_lagged": "75948cf8d6af6c77e9d43026673bb7ff44ea1c0e41492151b62b987b967fa652",
+    "lgbm_actual": "77550690f481d4aa6e7124fe9951a1516c84cc2dfba6f289697874af3a6422ac",
+    "lgbm_lagged": "b7bd4b40ffca820a54efd7dd1dd2cbe7e07ab7ac1f966d468a9c1773cd73c274"
+  },
+  "versions": {
+    "python": "3.13.18",
+    "lightgbm": "4.6.0",
+    "sklearn": "1.6.1",
+    "pandas": "2.3.3",
+    "numpy": "2.1.3"
+  },
+  "weather_hours_ffilled": 4,
+  "spikes": [
+    "2015-03-26 09:00:00+01:00",
+    "2015-08-26 19:00:00+02:00",
+    "2016-04-25 02:00:00+02:00",
+    "2018-05-06 12:00:00+02:00"
+  ],
+  "mae": {
+    "B0": 2631.889447236181,
+    "B1_actual": 1751.8035059988365,
+    "M1_actual": 1520.5259972724043,
+    "B1_lagged": 1760.1703952605085,
+    "M1_lagged": 1591.8087465119186,
+    "TSO": 268.45511649154867
+  }
+}

@@ -1,0 +1,253 @@
+ROOT: /kaggle/input/datasets/bathanhphan/p4aids-code | Kaggle: True | DRY RUN: False | evaluating on: test | output: /kaggle/working
+
+==============================================================================
+0. Preconditions
+==============================================================================
+ridge_actual  <- /kaggle/input/datasets/bathanhphan/p4aids-code/results/frozen/ridge_actual.json
+ridge_lagged  <- /kaggle/input/datasets/bathanhphan/p4aids-code/results/frozen/ridge_lagged.json
+lgbm_actual   <- /kaggle/input/datasets/bathanhphan/p4aids-code/results/frozen/lgbm_actual.json
+lgbm_lagged   <- /kaggle/input/datasets/bathanhphan/p4aids-code/results/frozen/lgbm_lagged.json
+sha256 ridge_actual: 999ba364a15991dba399ebcc0db6796c84b6d7166d44f430f9c239361ba6ee9e
+sha256 ridge_lagged: 75948cf8d6af6c77e9d43026673bb7ff44ea1c0e41492151b62b987b967fa652
+sha256 lgbm_actual: 77550690f481d4aa6e7124fe9951a1516c84cc2dfba6f289697874af3a6422ac
+sha256 lgbm_lagged: b7bd4b40ffca820a54efd7dd1dd2cbe7e07ab7ac1f966d468a9c1773cd73c274
+frozen configuration matches /kaggle/input/datasets/bathanhphan/p4aids-code/results/frozen/SHA256SUMS
+
+==============================================================================
+1. Full data and consistency with development data
+==============================================================================
+actual consistent with development data; {'test': 8756, 'train': 17332, 'val': 8757}
+lagged consistent with development data; {'test': 8756, 'train': 17332, 'val': 8757}
+spikes set to NaN: ['2015-03-26 09:00:00+01:00', '2015-08-26 19:00:00+02:00', '2016-04-25 02:00:00+02:00', '2018-05-06 12:00:00+02:00']
+
+==============================================================================
+2. Refit on all data before the evaluation year and predict
+==============================================================================
+actual: fitted on 26089 rows, predicting 8756 rows
+lagged: fitted on 26089 rows, predicting 8756 rows
+
+==============================================================================
+3. Main results on test
+==============================================================================
+
+--- test metrics ---
+               MAE     RMSE  MAPE_%    bias        n  val_MAE  test_minus_val_MAE
+B0        2,631.89 3,803.60    9.08   12.78 8,756.00 2,626.92                4.97
+B1_actual 1,751.80 2,510.24    5.95 -401.52 8,756.00 1,839.52              -87.72
+M1_actual 1,520.53 2,285.53    5.18 -387.13 8,756.00 1,590.80              -70.27
+B1_lagged 1,760.17 2,524.72    5.96 -445.42 8,756.00 1,858.75              -98.58
+M1_lagged 1,591.81 2,315.50    5.42 -355.29 8,756.00 1,683.38              -91.57
+TSO         268.46   366.82    0.92    1.87 8,756.00   314.13              -45.68
+
+--- paired comparisons (delta < 0: A better) ---
+           A          B    MAE_A    MAE_B     delta    ci_low  ci_high  delta_%load  threshold_MW months_A_better           verdict
+0  B1_actual         B0 1,751.80 2,631.89   -880.09 -1,119.56  -648.51        -3.03         52.64           12/12  A clearly better
+1  M1_actual  B1_actual 1,520.53 1,751.80   -231.28   -341.87  -119.18        -0.80         35.04           10/12  A clearly better
+2  M1_actual         B0 1,520.53 2,631.89 -1,111.36 -1,355.38  -871.05        -3.82         52.64           12/12  A clearly better
+3  B1_lagged         B0 1,760.17 2,631.89   -871.72 -1,123.94  -632.36        -3.00         52.64           12/12  A clearly better
+4  M1_lagged  B1_lagged 1,591.81 1,760.17   -168.36   -276.84   -55.83        -0.58         35.20           11/12  A clearly better
+5  M1_lagged         B0 1,591.81 2,631.89 -1,040.08 -1,296.10  -795.31        -3.58         52.64           12/12  A clearly better
+6  B1_actual  B1_lagged 1,751.80 1,760.17     -8.37    -39.41    23.25        -0.03         35.20            4/12         undecided
+7  M1_actual  M1_lagged 1,520.53 1,591.81    -71.28   -127.86   -11.12        -0.25         31.84            9/12  A clearly better
+
+==============================================================================
+4. Error breakdowns
+==============================================================================
+
+--- MAE by month ---
+            B0  B1_actual  M1_actual  B1_lagged  M1_lagged    TSO  n_hours
+month                                                                     
+1     2,967.00   2,109.00   1,526.00   2,092.00   1,611.00 314.00      744
+2     2,939.00   2,209.00   1,659.00   2,259.00   1,731.00 310.00      672
+3     2,886.00   1,851.00   1,554.00   1,845.00   1,580.00 349.00      743
+4     2,412.00   1,443.00   1,230.00   1,435.00   1,301.00 257.00      720
+5     2,003.00   1,383.00   1,384.00   1,354.00   1,348.00 212.00      743
+6     2,880.00   1,866.00   1,694.00   1,856.00   1,850.00 231.00      719
+7     2,351.00   1,764.00   1,345.00   1,799.00   1,624.00 258.00      743
+8     2,789.00   1,854.00   1,541.00   1,924.00   1,663.00 309.00      744
+9     2,752.00   1,857.00   2,118.00   1,847.00   2,229.00 234.00      720
+10    2,077.00   1,488.00   1,303.00   1,449.00   1,218.00 234.00      744
+11    2,186.00   1,423.00   1,320.00   1,418.00   1,302.00 203.00      720
+12    3,361.00   1,806.00   1,596.00   1,876.00   1,668.00 310.00      744
+
+--- MAE by hour ---
+           B0  B1_actual  M1_actual  B1_lagged  M1_lagged  n_hours
+hour                                                              
+0    1,658.00   1,018.00     866.00   1,022.00     955.00      365
+1    1,462.00     900.00     778.00     903.00     848.00      365
+2    1,388.00     850.00     752.00     852.00     810.00      364
+3    1,362.00     851.00     767.00     853.00     809.00      365
+4    1,377.00     865.00     784.00     871.00     825.00      365
+5    1,484.00     968.00     860.00     978.00     914.00      365
+6    2,053.00   1,439.00   1,234.00   1,454.00   1,309.00      365
+7    3,246.00   2,216.00   1,808.00   2,222.00   1,915.00      365
+8    3,787.00   2,552.00   2,117.00   2,555.00   2,217.00      365
+9    3,586.00   2,436.00   2,088.00   2,449.00   2,156.00      364
+10   3,339.00   2,231.00   1,970.00   2,240.00   2,036.00      365
+11   3,143.00   2,153.00   1,898.00   2,159.00   1,968.00      365
+12   3,085.00   2,129.00   1,917.00   2,142.00   1,984.00      364
+13   3,057.00   2,102.00   1,899.00   2,109.00   1,960.00      365
+14   2,894.00   2,012.00   1,807.00   2,005.00   1,857.00      365
+15   3,069.00   2,158.00   1,934.00   2,155.00   1,994.00      365
+16   3,227.00   2,260.00   2,012.00   2,251.00   2,081.00      365
+17   3,288.00   2,253.00   2,009.00   2,251.00   2,091.00      365
+18   3,325.00   2,175.00   1,867.00   2,199.00   1,993.00      364
+19   3,419.00   2,179.00   1,804.00   2,208.00   1,937.00      365
+20   3,237.00   2,029.00   1,698.00   2,051.00   1,797.00      365
+21   2,616.00   1,674.00   1,447.00   1,689.00   1,481.00      365
+22   2,214.00   1,412.00   1,185.00   1,423.00   1,221.00      365
+23   1,853.00   1,185.00     994.00   1,204.00   1,047.00      365
+
+--- MAE by day type ---
+               B0  B1_actual  M1_actual  B1_lagged  M1_lagged    TSO  n_hours
+day_type                                                                     
+Saturday 2,469.00   1,680.00   1,617.00   1,669.00   1,709.00 254.00     1200
+Sunday   3,020.00   2,102.00   1,723.00   2,046.00   1,859.00 247.00     1246
+bridge   2,324.00   1,495.00   1,965.00   1,553.00   1,844.00 285.00      120
+holiday  4,777.00   2,567.00   2,272.00   2,624.00   2,321.00 438.00      264
+workday  2,494.00   1,662.00   1,416.00   1,684.00   1,474.00 268.00     5926
+/kaggle/input/datasets/bathanhphan/p4aids-code/src/evaluation.py:95: FutureWarning: The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
+  out = err.groupby(key).mean()
+/kaggle/input/datasets/bathanhphan/p4aids-code/src/evaluation.py:96: FutureWarning: The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
+  out["n_hours"] = err.groupby(key).size()
+
+--- MAE by temperature band ---
+             B0  B1_actual  M1_actual  B1_lagged  M1_lagged  n_hours
+T_band                                                              
+<5     2,942.00   2,045.00   1,612.00   2,087.00   1,624.00      375
+5-10   2,672.00   1,855.00   1,387.00   1,900.00   1,486.00     1663
+10-15  2,623.00   1,644.00   1,436.00   1,629.00   1,452.00     2187
+15-20  2,550.00   1,622.00   1,551.00   1,589.00   1,578.00     1734
+20-25  2,388.00   1,579.00   1,477.00   1,592.00   1,581.00     1577
+>25    2,930.00   2,123.00   1,838.00   2,165.00   2,010.00     1220
+
+train T range -1.2..35.9 °C, load 18,041..41,015 MW
+evaluation hours outside train range: temperature 3, load 0
+
+--- MAE on hours outside train range ---
+              B0  B1_actual  M1_actual  B1_lagged  M1_lagged  n_hours
+k                                                                    
+outside 2,317.00     570.00   1,348.00     479.00     934.00        3
+
+==============================================================================
+5. Where LightGBM gains or loses against Ridge
+==============================================================================
+
+--- mean |e_M1| - |e_B1| (MW, negative = LightGBM better) ---
+                   gain_actual  gain_lagged
+day_type Saturday       -63.00        40.00
+         Sunday        -379.00      -187.00
+         bridge         469.00       291.00
+         holiday       -295.00      -304.00
+         workday       -246.00      -210.00
+T_band   <5            -432.00      -463.00
+         5-10          -468.00      -414.00
+         10-15         -208.00      -176.00
+         15-20          -70.00       -11.00
+         20-25         -102.00       -11.00
+         >25           -285.00      -155.00
+month    1             -584.00      -482.00
+         2             -550.00      -527.00
+         3             -296.00      -265.00
+         4             -213.00      -134.00
+         5                1.00        -6.00
+         6             -172.00        -6.00
+         7             -418.00      -175.00
+         8             -313.00      -261.00
+         9              260.00       382.00
+         10            -185.00      -231.00
+         11            -103.00      -116.00
+         12            -210.00      -208.00
+
+--- 10 days where LightGBM gains most (actual weather) ---
+            gain_actual day_type  T_mean
+date                                    
+2018-01-11    -4,155.30  workday    8.60
+2018-01-09    -3,294.40  workday    5.90
+2018-02-09    -3,274.70  workday    4.30
+2018-10-07    -3,177.30   Sunday   18.20
+2018-04-11    -2,953.20  workday    9.90
+2018-06-01    -2,669.10  workday   19.20
+2018-07-10    -2,267.70  workday   25.70
+2018-10-01    -2,194.20  workday   20.50
+2018-02-15    -2,044.60  workday   11.50
+2018-01-03    -1,948.70  workday   14.00
+
+--- 10 days where LightGBM loses most (actual weather) ---
+            gain_actual  day_type  T_mean
+date                                     
+2018-09-30     3,495.20    Sunday   21.10
+2018-11-07     2,597.70   workday   13.40
+2018-01-04     2,457.00   workday   14.80
+2018-02-08     2,432.90   workday    3.90
+2018-09-08     2,218.50  Saturday   21.60
+2018-03-05     2,200.20   workday   10.60
+2018-05-11     2,039.10   workday   16.80
+2018-10-14     1,774.20    Sunday   18.50
+2018-05-04     1,713.80   workday   14.50
+2018-10-06     1,706.20  Saturday   19.30
+
+==============================================================================
+6. SHAP explanation of LightGBM
+==============================================================================
+actual: target = level
+
+--- per-feature mean |SHAP| (actual) ---
+               mean|SHAP|
+hour             2,114.00
+dow                698.00
+lag_d7             472.00
+ratio_morning      468.00
+lag_d1_h8          446.00
+lag_d2             375.00
+T_ma24             264.00
+doy_cos            262.00
+T                  158.00
+doy_sin            156.00
+hol_share           83.00
+month               66.00
+hol_share_d2        47.00
+xmas                34.00
+hol_share_d7        17.00
+hol_share_d1        16.00
+hol_nat             12.00
+bridge               6.00
+lagged: target = level
+
+--- per-feature mean |SHAP| (lagged) ---
+               mean|SHAP|
+hour             2,061.00
+lag_d7             702.00
+dow                657.00
+ratio_morning      465.00
+lag_d1_h8          414.00
+lag_d2             294.00
+doy_cos            285.00
+T_ma24_b           264.00
+doy_sin            184.00
+T_d1_h8            134.00
+T_d2_h             110.00
+hol_share           87.00
+month               83.00
+hol_share_d2        48.00
+xmas                39.00
+hol_share_d1        15.00
+hol_nat             14.00
+hol_share_d7        14.00
+bridge               6.00
+
+--- mean |SHAP| by feature group ---
+            actual   lagged
+load lags 1,077.00 1,144.00
+calendar  2,292.00 2,212.00
+holidays    169.00   180.00
+weather     375.00   395.00
+
+--- mean |SHAP| by month, actual weather ---
+                1        2        3        4        5        6        7        8        9        10       11       12
+load lags 1,353.00 1,355.00 1,227.00 1,025.00   925.00   844.00   924.00   958.00   937.00   972.00 1,212.00 1,205.00
+calendar  2,504.00 2,503.00 2,241.00 2,159.00 2,181.00 2,099.00 2,300.00 2,206.00 2,127.00 2,296.00 2,479.00 2,417.00
+holidays    206.00   125.00   198.00   156.00   146.00   111.00    99.00   132.00   122.00   168.00   157.00   402.00
+weather     379.00   293.00   289.00   482.00   554.00   457.00   345.00   512.00   229.00   415.00   289.00   253.00
+
+saved results for test in /kaggle/working/results and figures in /kaggle/working/figures
