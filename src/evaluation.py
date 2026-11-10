@@ -14,11 +14,16 @@ N_BOOT = 2000
 
 def metrics(y, yhat) -> dict:
     y, yhat = np.asarray(y, float), np.asarray(yhat, float)
+    # Model predictions are never missing (asserted in the scripts); this only matters for the
+    # TSO reference column, which may have gaps -> scored on its available hours, n reported.
+    ok = ~(np.isnan(y) | np.isnan(yhat))
+    y, yhat = y[ok], yhat[ok]
     e = y - yhat
     return {"MAE": float(np.mean(np.abs(e))), "RMSE": float(np.sqrt(np.mean(e ** 2))),
             # MAPE only for comparison with the literature (most papers report it);
             # safe here because load never gets near 0.
             "MAPE_%": float(100 * np.mean(np.abs(e) / y)),
+            # bias = mean(prediction - actual): negative means under-forecasting
             "bias": float(np.mean(-e)), "n": int(len(y))}
 
 

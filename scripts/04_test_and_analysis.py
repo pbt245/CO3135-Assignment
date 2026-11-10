@@ -42,6 +42,21 @@ for name in ["ridge_actual", "ridge_lagged", "lgbm_actual", "lgbm_lagged"]:
     assert hit is not None, f"frozen/{name}.json missing: run scripts 02 and 03 first"
     frozen[name] = json.load(open(hit))
     print(f"{name:13s} <- {hit}")
+# The frozen files must match the SHA256 manifest written when the configuration was frozen
+# (results/frozen/SHA256SUMS, also recorded in decisions.md): proves nothing was re-tuned after.
+import hashlib
+frozen_sha = {}
+for name in frozen:
+    hit = next(d / f"{name}.json" for d in C.frozen_search_dirs() if (d / f"{name}.json").exists())
+    frozen_sha[name] = hashlib.sha256(hit.read_bytes()).hexdigest()
+    print(f"sha256 {name}: {frozen_sha[name]}")
+manifest = next((d / "SHA256SUMS" for d in C.frozen_search_dirs() if (d / "SHA256SUMS").exists()), None)
+if not DRY:
+    assert manifest is not None, "results/frozen/SHA256SUMS missing: freeze the configuration first"
+    expected = dict(line.split()[::-1] for line in manifest.read_text().splitlines() if line.strip())
+    for name, h in frozen_sha.items():
+        assert expected.get(f"{name}.json") == h, f"{name}.json differs from the frozen manifest"
+    print("frozen configuration matches", manifest)
 smoke_params = [k for k, v in frozen.items() if v.get("smoke")]
 assert DRY or not smoke_params, f"{smoke_params} come from a SMOKE run; rerun script 03 with the full budget"
 if not DRY:
@@ -208,11 +223,19 @@ for ax, hours, title in [(axes[0], [4], "04:00"), (axes[1], [13], "13:00")]:
 axes[0].set_ylabel("SHAP(T) + SHAP(T_ma24)  (MW)")
 plt.tight_layout(); P.save(fig, f"04_{TAG}_shap_temperature"); plt.close(fig)
 
+import importlib.metadata as _md
+import platform
+import sklearn
 log = {"run": TAG, "started": run_started, "finished": dt.datetime.now().isoformat(timespec="seconds"),
-       "rerun_reason": os.environ.get("P4AIDS_RERUN_REASON"), "frozen": frozen,
-       "versions": {"lightgbm": lgb.__version__, "pandas": pd.__version__, "numpy": np.__version__},
+       "rerun_reason": os.environ.get("P4AIDS_RERUN_REASON"), "frozen": frozen, "frozen_sha256": frozen_sha,
+       "versions": {"python": platform.python_version(), "lightgbm": lgb.__version__, "sklearn": sklearn.__version__,
+                    "pandas": pd.__version__, "numpy": np.__version__},
+       "weather_hours_ffilled": info.get("weather_hours_ffilled"), "spikes": info["spikes"],
        "mae": metrics["MAE"].to_dict()}
 json.dump(log, open(C.RESULTS_DIR / f"{TAG}_run_log.json", "w"), indent=2, default=str)
+# full environment, as the plan requires (pip freeze equivalent, no subprocess needed)
+with open(C.RESULTS_DIR / f"{TAG}_env.txt", "w") as fh:
+    fh.write("\n".join(sorted(f"{d.metadata['Name']}=={d.version}" for d in _md.distributions())))
 print(f"\nsaved results for {TAG} in {C.RESULTS_DIR} and figures in {C.FIG_DIR}")
 # Phân tích viết sau khi có kết quả (theo mức tốt hơn rõ / xấp xỉ / không phân định): B1 vs B0; M1 vs B1 và ở đâu
 # (mục 5); actual vs lagged; độ lệch validation-test; SHAP; TSO chỉ mô tả.

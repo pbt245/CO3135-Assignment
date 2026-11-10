@@ -41,6 +41,16 @@ What we can already say from the development data (validation 2017, before the t
         thresholds ($\delta$, spike rule, grids).
   \item \textbf{Actual load} may have been revised after publication; the TSO column's information
         time is unknown.
+  \item \textbf{Tuning budgets differ:} 94 Ridge fits versus 30 LightGBM trials whose early stopping
+        uses the same validation year. The resulting optimism of M1 on validation is estimated at
+        10--30\,MW, small next to the 175--249\,MW gap. The chosen \code{min\_data\_in\_leaf} (11--13)
+        lies near the lower edge (10) of the search space. The number of trees is kept fixed when
+        refitting on three years, which, if anything, slightly disadvantages M1.
+  \item \textbf{Design details:} the spike rule looks at the next hour, so in principle the
+        cleaning of hour 08 on $D-1$ uses hour 09 (no spike fell on hour 08). In the actual setting,
+        the 24-hour mean temperature at early hours of $D$ also uses the rest of $D-1$. The holiday
+        table misses five national holidays that fell on a Sunday in 2015--2017 (none in 2018).
+        The eight test comparisons are not corrected for multiple testing.
   \item All relations are statistical associations, not causal effects.
 \end{itemize}
 

@@ -83,7 +83,10 @@ def build_features(p: pd.DataFrame, mode: str) -> pd.DataFrame:
     # ---- holidays (and whether the days used as lags were holidays: a lag taken from a
     # holiday is a bad reference, the flag lets the model discount it)
     hol = load_holiday_table()
-    days = pd.date_range(d.min() - pd.Timedelta("8D"), d.max(), freq="D")
+    # +1 day: the bridge rule of the last day needs the next day's holiday status (holiday
+    # calendars are published in advance, so this is not look-ahead). Found by the audit:
+    # 2018-12-31 (Mon before the Tue 2019-01-01 holiday) was otherwise not flagged.
+    days = pd.date_range(d.min() - pd.Timedelta("8D"), d.max() + pd.Timedelta("1D"), freq="D")
     hd = hol.reindex(days).fillna(0.0)
     # A day counts as a holiday when at least half of the regions are off (national days,
     # Holy Thursday); used only for the bridge rule below.

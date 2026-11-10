@@ -100,6 +100,7 @@ def build_panel(end: str | None = C.TEST_START, raw_dir=C.RAW_DIR) -> tuple[pd.D
     p[["spike", "y_was_nan"]] = p[["spike", "y_was_nan"]].fillna(0).astype(int)
     tcols = [f"T_{c}" for c in C.CITIES]
     # Weather has no gaps except the DST slot; fill it from the previous hour (past only).
+    info["weather_hours_ffilled"] = int(p[tcols].isna().any(axis=1).sum())
     p[tcols] = p[tcols].ffill()
     # Simple 5-city mean: needs no external data, and Ridge and LightGBM see the same
     # variable. It may not represent national demand (no population weights) -> limitation.
