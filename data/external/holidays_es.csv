@@ -1,0 +1,179 @@
+date,hol_nat,hol_share,names
+2014-01-01,1,1.0,Año Nuevo
+2014-01-06,1,1.0,Epifanía del Señor
+2014-02-28,0,0.0588,Día de Andalucía
+2014-03-01,0,0.0588,Día de las Islas Baleares
+2014-03-19,0,0.1765,San José
+2014-04-17,0,0.8824,Jueves Santo
+2014-04-18,1,1.0,Viernes Santo
+2014-04-21,0,0.3529,Lunes de Pascua
+2014-04-23,0,0.1176,Día de San Jorge | Fiesta de Castilla y León
+2014-05-01,1,1.0,Fiesta del Trabajo
+2014-05-02,0,0.0588,Fiesta de la Comunidad de Madrid
+2014-05-17,0,0.0588,Día de las Letras Gallegas
+2014-05-30,0,0.0588,Día de Canarias
+2014-05-31,0,0.0588,Día de Castilla-La Mancha
+2014-06-09,0,0.1176,Día de La Rioja | Día de la Región de Murcia
+2014-06-19,0,0.1176,Corpus Christi
+2014-06-24,0,0.0588,San Juan
+2014-07-25,0,0.1176,Día Nacional de Galicia | Santiago Apóstol
+2014-07-28,0,0.0588,Día de las Instituciones de Cantabria
+2014-08-15,1,1.0,Asunción de la Virgen
+2014-09-08,0,0.1176,Día de Asturias | Día de Extremadura
+2014-09-11,0,0.0588,Fiesta Nacional de Cataluña
+2014-09-15,0,0.0588,La Bien Aparecida
+2014-10-09,0,0.0588,Día de la Comunidad Valenciana
+2014-10-13,0,0.2941,Lunes siguiente a Fiesta Nacional de España
+2014-10-25,0,0.0588,Día del País Vasco
+2014-11-01,1,1.0,Todos los Santos
+2014-12-03,0,0.0588,San Francisco Javier
+2014-12-06,1,1.0,Día de la Constitución Española
+2014-12-08,1,1.0,Inmaculada Concepción
+2014-12-25,1,1.0,Natividad del Señor
+2014-12-26,0,0.1176,San Esteban
+2015-01-01,1,1.0,Año Nuevo
+2015-01-06,1,1.0,Epifanía del Señor
+2015-02-28,0,0.0588,Día de Andalucía
+2015-03-19,0,0.2941,San José
+2015-03-20,0,0.0588,Día siguiente a San José
+2015-04-02,0,0.8824,Jueves Santo
+2015-04-03,1,1.0,Viernes Santo
+2015-04-06,0,0.4706,Lunes de Pascua
+2015-04-23,0,0.1176,Día de San Jorge | Fiesta de Castilla y León
+2015-05-01,1,1.0,Fiesta del Trabajo
+2015-05-02,0,0.0588,Fiesta de la Comunidad de Madrid
+2015-05-30,0,0.0588,Día de Canarias
+2015-06-04,0,0.0588,Corpus Christi
+2015-06-09,0,0.1176,Día de La Rioja | Día de la Región de Murcia
+2015-06-24,0,0.0588,San Juan
+2015-07-25,0,0.1765,Día Nacional de Galicia | Santiago Apóstol
+2015-08-15,1,1.0,Asunción de la Virgen
+2015-09-08,0,0.1176,Día de Asturias | Día de Extremadura
+2015-09-11,0,0.0588,Fiesta Nacional de Cataluña
+2015-09-15,0,0.0588,La Bien Aparecida
+2015-10-09,0,0.0588,Día de la Comunidad Valenciana
+2015-10-12,1,1.0,Fiesta Nacional de España
+2015-11-02,0,0.5294,Lunes siguiente a Todos los Santos
+2015-12-03,0,0.0588,San Francisco Javier
+2015-12-07,0,0.5882,Lunes siguiente a Día de la Constitución Española
+2015-12-08,1,1.0,Inmaculada Concepción
+2015-12-25,1,1.0,Natividad del Señor
+2015-12-26,0,0.0588,San Esteban
+2016-01-01,1,1.0,Año Nuevo
+2016-01-06,1,1.0,Epifanía del Señor
+2016-02-29,0,0.0588,Lunes siguiente a Día de Andalucía
+2016-03-01,0,0.0588,Día de las Islas Baleares
+2016-03-19,0,0.1176,San José
+2016-03-24,0,0.9412,Jueves Santo
+2016-03-25,1,1.0,Viernes Santo
+2016-03-28,0,0.3529,Lunes de Pascua
+2016-04-23,0,0.1176,Día de San Jorge | Fiesta de Castilla y León
+2016-05-02,0,0.4118,Fiesta de la Comunidad de Madrid | Lunes siguiente a Fiesta del Trabajo
+2016-05-16,0,0.0588,Día de la Pascua Granada
+2016-05-17,0,0.0588,Día de las Letras Gallegas
+2016-05-26,0,0.0588,Corpus Christi
+2016-05-30,0,0.0588,Día de Canarias
+2016-05-31,0,0.0588,Día de Castilla-La Mancha
+2016-06-09,0,0.1176,Día de La Rioja | Día de la Región de Murcia
+2016-06-24,0,0.1176,San Juan
+2016-07-25,0,0.2941,Día Nacional de Galicia | Santiago Apóstol
+2016-07-28,0,0.0588,Día de las Instituciones de Cantabria
+2016-08-15,1,1.0,Asunción de la Virgen
+2016-09-08,0,0.1176,Día de Asturias | Día de Extremadura
+2016-09-15,0,0.0588,La Bien Aparecida
+2016-10-07,0,0.0588,80 Aniversario del primer Gobierno Vasco
+2016-10-12,1,1.0,Fiesta Nacional de España
+2016-11-01,1,1.0,Todos los Santos
+2016-12-03,0,0.0588,San Francisco Javier
+2016-12-06,1,1.0,Día de la Constitución Española
+2016-12-08,1,1.0,Inmaculada Concepción
+2016-12-26,0,0.7647,Lunes siguiente a Natividad del Señor | San Esteban
+2017-01-02,0,0.2941,Lunes siguiente a Año Nuevo
+2017-01-06,1,1.0,Epifanía del Señor
+2017-02-28,0,0.0588,Día de Andalucía
+2017-03-01,0,0.0588,Día de las Islas Baleares
+2017-03-20,0,0.1176,Lunes siguiente a San José
+2017-04-13,0,0.9412,Jueves Santo
+2017-04-14,1,1.0,Viernes Santo
+2017-04-17,0,0.3529,Lunes de Pascua
+2017-04-24,0,0.1176,Lunes siguiente a Día de San Jorge | Lunes siguiente a Fiesta de Castilla y León
+2017-05-01,1,1.0,Fiesta del Trabajo
+2017-05-02,0,0.0588,Fiesta de la Comunidad de Madrid
+2017-05-17,0,0.0588,Día de las Letras Gallegas
+2017-05-30,0,0.0588,Día de Canarias
+2017-05-31,0,0.0588,Día de Castilla-La Mancha
+2017-06-09,0,0.1176,Día de La Rioja | Día de la Región de Murcia
+2017-06-15,0,0.0588,Corpus Christi
+2017-06-24,0,0.0588,San Juan
+2017-07-25,0,0.1765,Día Nacional de Galicia | Santiago Apóstol
+2017-07-28,0,0.0588,Día de las Instituciones de Cantabria
+2017-08-15,1,1.0,Asunción de la Virgen
+2017-09-08,0,0.1176,Día de Asturias | Día de Extremadura
+2017-09-11,0,0.0588,Fiesta Nacional de Cataluña
+2017-09-15,0,0.0588,La Bien Aparecida
+2017-10-09,0,0.0588,Día de la Comunidad Valenciana
+2017-10-12,1,1.0,Fiesta Nacional de España
+2017-11-01,1,1.0,Todos los Santos
+2017-12-04,0,0.0588,Lunes siguiente a San Francisco Javier
+2017-12-06,1,1.0,Día de la Constitución Española
+2017-12-08,1,1.0,Inmaculada Concepción
+2017-12-25,1,1.0,Natividad del Señor
+2017-12-26,0,0.0588,San Esteban
+2018-01-01,1,1.0,Año Nuevo
+2018-01-06,1,1.0,Epifanía del Señor
+2018-02-28,0,0.0588,Día de Andalucía
+2018-03-01,0,0.0588,Día de las Islas Baleares
+2018-03-19,0,0.1176,San José
+2018-03-29,0,0.8235,Jueves Santo
+2018-03-30,1,1.0,Viernes Santo
+2018-04-02,0,0.2941,Lunes de Pascua
+2018-04-23,0,0.1176,Día de San Jorge | Fiesta de Castilla y León
+2018-05-01,1,1.0,Fiesta del Trabajo
+2018-05-02,0,0.0588,Fiesta de la Comunidad de Madrid
+2018-05-17,0,0.0588,Día de las Letras Gallegas
+2018-05-30,0,0.0588,Día de Canarias
+2018-05-31,0,0.0588,Día de Castilla-La Mancha
+2018-06-09,0,0.1176,Día de La Rioja | Día de la Región de Murcia
+2018-07-25,0,0.0588,Día Nacional de Galicia
+2018-07-28,0,0.0588,Día de las Instituciones de Cantabria
+2018-08-15,1,1.0,Asunción de la Virgen
+2018-09-08,0,0.1176,Día de Asturias | Día de Extremadura
+2018-09-11,0,0.0588,Fiesta Nacional de Cataluña
+2018-09-15,0,0.0588,La Bien Aparecida
+2018-10-09,0,0.0588,Día de la Comunidad Valenciana
+2018-10-12,1,1.0,Fiesta Nacional de España
+2018-11-01,1,1.0,Todos los Santos
+2018-12-03,0,0.0588,San Francisco Javier
+2018-12-06,1,1.0,Día de la Constitución Española
+2018-12-08,1,1.0,Inmaculada Concepción
+2018-12-25,1,1.0,Natividad del Señor
+2018-12-26,0,0.0588,San Esteban
+2019-01-01,1,1.0,Año Nuevo
+2019-01-07,0,0.5294,Lunes siguiente a Epifanía del Señor
+2019-02-28,0,0.0588,Día de Andalucía
+2019-03-01,0,0.0588,Día de las Islas Baleares
+2019-03-19,0,0.2941,San José
+2019-04-18,0,0.8824,Jueves Santo
+2019-04-19,1,1.0,Viernes Santo
+2019-04-22,0,0.4706,Lunes de Pascua
+2019-04-23,0,0.1176,Día de San Jorge | Fiesta de Castilla y León
+2019-05-01,1,1.0,Fiesta del Trabajo
+2019-05-02,0,0.0588,Fiesta de la Comunidad de Madrid
+2019-05-17,0,0.0588,Día de las Letras Gallegas
+2019-05-30,0,0.0588,Día de Canarias
+2019-05-31,0,0.0588,Día de Castilla-La Mancha
+2019-06-10,0,0.1176,Lunes siguiente a Día de La Rioja | Lunes siguiente a Día de la Región de Murcia
+2019-06-20,0,0.0588,Corpus Christi
+2019-06-24,0,0.1176,San Juan
+2019-07-25,0,0.1765,Día Nacional de Galicia | Santiago Apóstol
+2019-08-15,1,1.0,Asunción de la Virgen
+2019-09-09,0,0.1176,Lunes siguiente a Día de Asturias | Lunes siguiente a Día de Extremadura
+2019-09-11,0,0.0588,Fiesta Nacional de Cataluña
+2019-10-09,0,0.0588,Día de la Comunidad Valenciana
+2019-10-12,1,1.0,Fiesta Nacional de España
+2019-11-01,1,1.0,Todos los Santos
+2019-12-03,0,0.0588,San Francisco Javier
+2019-12-06,1,1.0,Día de la Constitución Española
+2019-12-09,0,0.4706,Lunes siguiente a Inmaculada Concepción
+2019-12-25,1,1.0,Natividad del Señor
+2019-12-26,0,0.1176,San Esteban

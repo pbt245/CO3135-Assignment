@@ -1,0 +1,20 @@
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
+# raw Kaggle data: re-download with the kaggle CLI (see README), do not commit
+data/raw/
+# rebuilt by notebook 01
+data/processed/
+# upload bundle for Kaggle
+kaggle_code.zip
+# LaTeX build files
+report/*.aux
+report/*.log
+report/*.out
+report/*.toc
+report/*.bbl
+report/*.blg
+report/*.fls
+report/*.fdb_latexmk
+report/*.synctex.gz
