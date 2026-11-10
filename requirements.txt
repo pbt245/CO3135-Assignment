@@ -1,0 +1,15 @@
+# Versions used for the local smoke tests (Python 3.14). On Kaggle the preinstalled
+# versions are used; notebook 03/04 record the lightgbm/optuna versions in the frozen JSON.
+pandas==3.1.1
+numpy==2.5.4
+scikit-learn==1.9.1
+lightgbm==4.7.0
+optuna==5.0.0
+matplotlib==3.11.2
+pyarrow==26.0.1
+# only needed to regenerate data/external/holidays_es.csv (tools/make_holiday_table.py)
+holidays==0.108
+# only needed to build / execute notebooks locally
+jupyter==1.1.1
+nbformat==5.11.1
+nbconvert==7.17.2
