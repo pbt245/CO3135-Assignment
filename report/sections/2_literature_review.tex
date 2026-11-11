@@ -16,9 +16,9 @@ factors: the forecast horizon, whether past load is an input, and how weather is
 \subsection{Classical statistical baselines}
 \label{sec:lit-classical}
 
-Seasonal naive copies the load of the same hour one day or one week earlier. ARIMA and exponential
-smoothing model the series itself. On 35 ENTSO-E countries in 2018, Smyl et al.\ report a day-ahead
-MAPE of 5.08\% for weekly naive, 3.30\% for ARIMA and 3.11\% for ETS~\cite{smyl2023esdrnn}. In
+Seasonal naive copies the load of the same hour one day or one week earlier. ARIMA (autoregressive integrated moving
+average) and exponential smoothing (ETS) model the series itself. On 35 ENTSO-E countries in 2018, Smyl et al.\ report a day-ahead
+mean absolute percentage error (MAPE) of 5.08\% for weekly naive, 3.30\% for ARIMA and 3.11\% for ETS~\cite{smyl2023esdrnn}. In
 Portugal, weekly seasonal naive reaches 4.29\%~\cite{pelekis2023comparative}. Wang et al.\ conclude
 that naive models are not useful as the main benchmark at the aggregate level~\cite{wang2016recency}.
 We therefore keep seasonal naive only as a floor (B0).
@@ -28,11 +28,12 @@ We therefore keep seasonal naive only as a floor (B0).
 
 Linear and additive models with calendar, lagged load and temperature terms are the classic
 approach. Fan and Hyndman use a semi-parametric additive model with calendar, lagged load and
-temperature for the Australian market~\cite{fan2012semiparametric}. The winner of GEFCom2012 was a
+temperature for the Australian market~\cite{fan2012semiparametric}. The winner of the Global Energy
+Forecasting Competition 2012 (GEFCom2012) was a
 refined multiple regression with separate models per zone, hour, season and day
 type~\cite{charlton2014refined}. In Italy, a regularised linear model using only the previous day's
 load is competitive with the TSO forecast once special days are excluded~\cite{incremona2021italian}.
-For Spain, Pardo et al.\ find that heating and cooling degree days and seasonality stay significant
+For Spain, Pardo et al.\ find that heating and cooling degree days (HDD, CDD) and seasonality stay significant
 after autoregressive terms, on daily data~\cite{pardo2002temperature}. These models are easy to
 explain, but they depend on the analyst choosing the right functional form.
 
@@ -57,11 +58,11 @@ weather. This is exactly the comparison of Q1 and Q2.
 \subsection{Pattern-based methods and deep learning}
 \label{sec:lit-dl}
 
-Deep learning results are mixed. A meta-regression over 59 studies finds LSTM and hybrid networks
+Deep learning results are mixed. A meta-regression over 59 studies finds long short-term memory (LSTM) and hybrid networks
 best overall~\cite{hopf2023meta}, and an LSTM beat tuned machine-learning models on French
 load~\cite{bouktif2018optimal}. On the other hand, LSTM (2.76\% MAPE) was beaten by simple
-pattern-based methods on 35 countries~\cite{smyl2023esdrnn}, and in Portugal a plain MLP (2.02\%)
-was close to N-BEATS (1.90\%) at much lower cost~\cite{pelekis2023comparative}. Pattern-based
+pattern-based methods on 35 countries~\cite{smyl2023esdrnn}, and in Portugal a plain multilayer perceptron (MLP, 2.02\%)
+was close to N-BEATS (Neural Basis Expansion Analysis for Time Series, 1.90\%) at much lower cost~\cite{pelekis2023comparative}. Pattern-based
 methods~\cite{dudek2021ensembles} are cheap and strong, but they use no weather, so they cannot
 answer Q3. We do not implement LSTM. This is a scope decision: the assignment allows classical
 machine learning only, and our questions are about features and weather. It is not a claim that
@@ -80,7 +81,8 @@ available in advance, and \emph{ex-post} forecasts as those using later informat
 predictors~\cite{hyndman2021fpp3}. Many academic studies use ex-post weather. This is why we report
 the \emph{actual} and \emph{lagged} settings separately (\cref{sec:weather-settings}).
 
-For explanation we use SHAP values~\cite{lundberg2017unified}. TreeSHAP only partly accounts for
+For explanation we use SHAP (SHapley Additive exPlanations)
+values~\cite{lundberg2017unified}. TreeSHAP, the SHAP algorithm for tree ensembles, only partly accounts for
 dependence between features, and explanations can be misleading when features are strongly
 dependent~\cite{aas2021explaining}. SHAP explains what the \emph{model} uses, not how load depends
 on its causes~\cite{chen2020true}. We therefore read SHAP by feature group, not by single feature.

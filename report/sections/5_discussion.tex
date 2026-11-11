@@ -23,9 +23,9 @@ September 2018, a month with unusual recorded load.
 LightGBM improves by 71\,MW (0.25\% of load); Ridge does not improve measurably. This is an upper
 bound for the value of weather forecasts in this set-up, and it is smaller than the gain from
 changing the model. It agrees with the weak within-month temperature effect found on the training
-years (\cref{tab:s2}): once lags and calendar are present, temperature adds little extra information.
-This does not mean temperature is unimportant; much of its effect is already carried by the season
-and by recent load.
+years (\cref{tab:s2}): once lags and calendar are present, same-day temperature adds little extra
+information. This does not mean temperature is unimportant. A plausible explanation, which we did not
+test, is that much of its effect is already carried by the season and by recent load.
 
 \paragraph{What this means for a public-data analyst.} Spend effort first on features (lags at the
 right information time, calendar, holidays), then on a flexible model; a weather-forecast feed comes
@@ -66,36 +66,32 @@ a replacement.
 \subsection{Future Work}
 \label{sec:future}
 
-Items are ordered by expected value for the questions of this report. Status is updated as work
-progresses.
+We list only extensions that follow directly from a result or a limitation above, ordered by
+expected value for the questions of this report (\cref{tab:future}).
 
 \begin{table}[H]
   \centering
   \small
-  \caption{Planned extensions (not done yet unless marked).}
+  \caption{Extensions and the finding or limitation each one addresses.}
   \label{tab:future}
-  \begin{tabularx}{\linewidth}{@{}l Y l@{}}
+  \begin{tabularx}{\linewidth}{@{}Y Y@{}}
     \toprule
-    ID & Extension & Status \\
+    Extension & Addresses \\
     \midrule
-    F1 & Monthly refit on the test year (rolling origin) instead of one refit per year. & \todo{} \\
-    F2 & Population-weighted temperature, or degree days per city before averaging. & \todo{} \\
-    F3 & Diebold--Mariano test as a cross-check of the block bootstrap. & \todo{} \\
-    F4 & Ridge without load lags (2$\times$2: with/without lags $\times$ with/without temperature) to
-         see how much temperature information the lags absorb. & \todo{} \\
-    F5 & Error breakdown with and without special days, to compare with studies that exclude
-         them~\cite{incremona2021italian,dudek2021ensembles}. & \todo{} \\
-    F6 & Cubic temperature terms and temperature $\times$ month for Ridge (is Ridge limited by its
-         functional form?). & \todo{} \\
-    F7 & Humidity as an extra weather variable (actual setting only). & \todo{} \\
-    F8 & Similar-day (pattern-based) baseline~\cite{dudek2021ensembles}. & \todo{} \\
-    F9 & Sensitivity to an earlier issue time ($D-2$) for both load and weather. & \todo{} \\
-    F10 & A deep model (MLP or LSTM) under the same protocol, if the scope allows. & \todo{} \\
-    F11 & Probabilistic forecasts (quantile LightGBM) for operational use. & \todo{} \\
-    F12 & Better bridge-day handling (e.g.\ a bridge $\times$ hour interaction, or using the previous
-          year's bridge days), the weakest point of LightGBM in both years. & \todo{} \\
-    F13 & Check the unusual load of September 2018 against the original ENTSO-E data (real events
-          or date misalignment?). & \todo{} \\
+    Better bridge-day and holiday handling, e.g.\ a bridge $\times$ hour interaction or the previous
+      year's bridge days as reference.
+      & The weakest point of LightGBM in both years (\cref{sec:eval-why}). \\ \addlinespace
+    Use an archive of real day-ahead weather forecasts.
+      & Q3 is only bounded by the \emph{actual} and \emph{lagged} settings; the operational value of a
+        forecast feed lies in between and is not measured. \\ \addlinespace
+    Monthly refit on the test year (rolling origin) instead of one refit per year.
+      & Models may age during 2018. \\ \addlinespace
+    Population-weighted temperature, or degree days per city before averaging.
+      & The five-city mean is crude, and the within-month temperature effect is weak
+        (\cref{tab:s2}). \\ \addlinespace
+    Check the load of September 2018 against the original ENTSO-E data.
+      & The only month in which LightGBM is clearly worse than Ridge: real events or a date
+        misalignment? \\
     \bottomrule
   \end{tabularx}
 \end{table}

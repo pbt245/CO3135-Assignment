@@ -9,7 +9,7 @@
 
 We forecast the hourly electricity load of Spain one day ahead. At 10:00 local time on day $D-1$,
 two hours before the 12:00 gate closure of the day-ahead market, the model outputs 24 values
-$\hat y_{D,0},\dots,\hat y_{D,23}$ (MW), one for each local hour of day $D$. Only information
+$\hat y_{D,0},\dots,\hat y_{D,23}$ in megawatts (MW), one for each local hour of day $D$. Only information
 published before 10:00 on $D-1$ may be used. The newest load hour that is surely available at that
 time is the hour stamped 08:00 on $D-1$. The most recent \emph{same-hour} load value is therefore
 two days old ($D-2$), not one.
@@ -25,7 +25,7 @@ obtaining weather forecasts. We therefore ask three questions:
 \begin{enumerate}[label=\textbf{Q\arabic*}, leftmargin=*]
   \item How much error do lag, calendar, holiday and temperature features remove, using a linear model
         (B1 Ridge versus the seasonal-naive B0)?
-  \item Does a non-linear model (M1 LightGBM) add accuracy once these features exist (M1 versus B1)?
+  \item Does a non-linear model (M1 LightGBM, Light Gradient Boosting Machine) add accuracy once these features exist (M1 versus B1)?
   \item How much is knowing the actual weather of day $D$ worth, compared with only past weather?
 \end{enumerate}
 
@@ -33,7 +33,8 @@ obtaining weather forecasts. We therefore ask three questions:
 \label{sec:dataset}
 
 We use the Kaggle dataset ``Hourly energy demand generation and weather''~\cite{jhana2019energy}.
-It joins ENTSO-E load and generation data with hourly weather of five Spanish cities
+It joins load and generation data from ENTSO-E (European Network of Transmission System Operators
+for Electricity) with hourly weather of five Spanish cities
 (\cref{tab:dataset}).
 
 \begin{table}[H]

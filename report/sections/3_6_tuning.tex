@@ -4,7 +4,7 @@
 \subsection{Hyper-parameter Tuning}
 \label{sec:tuning}
 
-Every model is tuned on the same validation year, with validation MAE as the criterion, separately
+Every model is tuned on the same validation year, with validation mean absolute error (MAE) as the criterion, separately
 in each weather setting. Budgets differ and are reported openly (\cref{tab:tuning}). Seed 42 is used
 everywhere.
 
@@ -24,7 +24,7 @@ everywhere.
         widened before choosing. \\
     M1 LightGBM & target $\in$ \{level, change\}; \code{num\_leaves} 8--256; \code{min\_data\_in\_leaf}
       10--300; \code{feature\_fraction} 0.5--1; \code{lambda\_l2} $10^{-3}$--10
-      & Optuna~\cite{akiba2019optuna} TPE, 30 trials. Learning rate fixed at 0.03; the number of trees
+      & Optuna~\cite{akiba2019optuna} with the Tree-structured Parzen Estimator (TPE), 30 trials. Learning rate fixed at 0.03; the number of trees
         comes from early stopping (200 rounds) on validation MAE and is kept fixed when refitting. A
         small budget on purpose: with two training years, heavy tuning overfits the validation
         year~\cite{smyl2023esdrnn}. \\

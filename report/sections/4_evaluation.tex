@@ -7,7 +7,7 @@
 \subsection{Protocol}
 \label{sec:protocol}
 
-\paragraph{Metrics.} MAE in MW is the main metric because it has a physical unit. RMSE stresses
+\paragraph{Metrics.} MAE in MW is the main metric because it has a physical unit. Root mean squared error (RMSE) stresses
 large errors. MAPE is reported only for comparison with the literature, and is safe here because load
 never approaches zero~\cite{hyndman2021fpp3}. We also report the bias (mean of prediction minus
 actual).
@@ -120,7 +120,7 @@ features to fix this after seeing the validation year, since that would overfit 
 \label{sec:eval-test}
 
 The test script ran once on Kaggle (started 2026-11-10 17:16 UTC, after the configuration was frozen
-at 16:32 UTC). It verified the SHA-256 hashes of the frozen parameters and that adding 2018 changed
+at 16:32 UTC). It verified the SHA-256 (Secure Hash Algorithm) hashes of the frozen parameters and that adding 2018 changed
 no feature of any earlier row. One one-hour spike in 2018 (6 May, 12:00) was set to missing by the
 cleaning rule; 4 weather hours (clock-change slots) were forward-filled.
 
