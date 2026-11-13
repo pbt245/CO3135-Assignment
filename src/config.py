@@ -102,13 +102,17 @@ FIG_DIR = OUT_DIR / "figures"
 # Frozen configuration = hyper-parameters chosen on validation. It is written by
 # notebooks 02/03 and must be committed to git before notebook 04 (test) is run.
 FROZEN_DIR = RESULTS_DIR / "frozen"
+# Second frozen set: the extra models added after the first test run (lecturer's feedback; scripts 05/06).
+# Kept in its own folder so the original frozen files and their hashes are never touched.
+FROZEN_V2_DIR = RESULTS_DIR / "frozen_v2"
 
 
-def frozen_search_dirs() -> list[Path]:
-    """Where notebook 04 looks for the frozen config (Kaggle: output dir, then the code dataset)."""
-    dirs = [FROZEN_DIR, ROOT / "results" / "frozen"]
+def frozen_search_dirs(sub: str = "frozen") -> list[Path]:
+    """Where the test scripts look for a frozen config (Kaggle: output dir, then the code dataset)."""
+    marker = "ridge_actual.json" if sub == "frozen" else "SHA256SUMS"
+    dirs = [RESULTS_DIR / sub, ROOT / "results" / sub]
     if ON_KAGGLE:
-        dirs += [p.parent for p in Path("/kaggle/input").glob("**/frozen/ridge_actual.json")]
+        dirs += [p.parent for p in Path("/kaggle/input").glob(f"**/{sub}/{marker}")]
     out = []
     for d in dirs:
         if d not in out:
@@ -116,5 +120,5 @@ def frozen_search_dirs() -> list[Path]:
     return out
 
 
-for _d in (PROCESSED_DIR, RESULTS_DIR, FIG_DIR, FROZEN_DIR):
+for _d in (PROCESSED_DIR, RESULTS_DIR, FIG_DIR, FROZEN_DIR, FROZEN_V2_DIR):
     _d.mkdir(parents=True, exist_ok=True)

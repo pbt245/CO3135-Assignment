@@ -27,9 +27,19 @@ WX = {
 }
 GROUPS = {"load lags": LAG, "calendar": CAL, "holidays": HOL, "weather": WX["actual"] + WX["lagged"]}
 
+# F0 = minimal inputs, no feature engineering (added after the first test run, on the lecturer's feedback, to
+# separate "fitting a model" from "engineering features"). Only what the dataset gives directly: hour, weekday,
+# month, the raw temperature of the setting, and lag_d7 -- exactly the information the seasonal naive B0 uses, so
+# that "Ridge F0 vs B0" isolates the value of fitting. No degree days, holidays, D-2 / D-1 lags, morning ratio or
+# cyclic encodings. F1 = the full engineered set above.
+F0 = {"actual": ["hour", "dow", "month", "lag_d7", "T"],
+      "lagged": ["hour", "dow", "month", "lag_d7", "T_d1_h8"]}
+FEATURE_SETS = ("F0", "F1")
 
-def feature_cols(mode: str) -> list[str]:
-    return LAG + CAL + HOL + WX[mode]
+
+def feature_cols(mode: str, fset: str = "F1") -> list[str]:
+    assert fset in FEATURE_SETS
+    return F0[mode] if fset == "F0" else LAG + CAL + HOL + WX[mode]
 
 
 def _day_matrix(p: pd.DataFrame, col: str) -> pd.DataFrame:
@@ -124,7 +134,8 @@ def build_features(p: pd.DataFrame, mode: str) -> pd.DataFrame:
     out["split"] = np.select([d < pd.Timestamp(C.VAL_START), d < pd.Timestamp(C.TEST_START)],
                              ["train", "val"], default="test")
     out = out.reset_index()
-    # usable = target observed, not a synthetic DST slot, all features present
+    # usable = target observed, not a synthetic DST slot, all features present. Always judged on F1 (F0 is a
+    # subset of F1), so every model and feature set is trained and scored on exactly the same hours.
     out["usable"] = out["y"].notna() & (out["dst_gap"] == 0) & out[feature_cols(mode)].notna().all(axis=1)
     return out
 

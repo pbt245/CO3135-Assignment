@@ -32,6 +32,8 @@ rsync -a --delete --exclude "__pycache__" --exclude ".DS_Store" \
   --include "/data/" --include "/data/external/***" \
   --include "/results/" --include "/results/frozen/***" \
   --include "/results/val_metrics.csv" --include "/results/test_run_log.json" \
+  --include "/results/frozen_v2/***" --include "/results/val_predictions.parquet" \
+  --include "/results/test_predictions.parquet" --include "/results/test_ablation_run_log.json" \
   --include "/requirements.txt" --include "/README.md" \
   --exclude "*" \
   "$REPO/" "$DEST/"

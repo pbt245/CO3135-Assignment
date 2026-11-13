@@ -12,6 +12,7 @@ So sánh B0 seasonal naive, B1 Ridge theo giờ (có feature engineering) và M1
 | `src/features.py` | Feature + `assert_no_lookahead` (tự kiểm tra leakage) |
 | `src/models.py` | B0, B1 `RidgePerHour`, M1 `LGBMModel`, tuning, SHAP |
 | `src/evaluation.py` | Metric, block bootstrap theo tuần, phân tầng sai số |
+| `src/ablation.py` | Lưới model bổ sung (F0/F1, theo giờ/toàn cục) và các cặp so sánh của script 05-06 |
 | `scripts/0X_*.py` | Các bước của pipeline; phần "vì sao" nằm trong docstring/comment |
 | `data/external/holidays_es.csv` | Bảng ngày lễ (sinh bởi `tools/make_holiday_table.py`) |
 | `results/frozen/` | Tham số đã chốt trên validation. **Phải commit trước khi chạy test** |
@@ -23,8 +24,10 @@ So sánh B0 seasonal naive, B1 Ridge theo giờ (có feature engineering) và M1
 | 02_features_baselines | Feature, B0, tuning Ridge trên validation 2017 | Máy cá nhân (~15 giây) |
 | 03_lightgbm_tuning | Optuna 30 trial × 2 cấu hình thời tiết, so sánh trên validation | **Kaggle** |
 | 04_test_and_analysis | Test 2018 **một lần**, phân tích, SHAP | **Kaggle**, sau khi auditor kiểm tra |
+| 05_ablation_tuning | Model bổ sung theo góp ý giảng viên (F0, Ridge toàn cục, LightGBM theo giờ): tune trên validation, đóng băng vào `results/frozen_v2/` | **Kaggle** |
+| 06_test_ablation | Test 2018 **một lần** cho các model bổ sung; B0/B1/M1 lấy từ lần test gốc, không fit lại | **Kaggle**, sau khi commit `frozen_v2/` |
 
-Năm 2018 (test) bị cắt khỏi dữ liệu thô ở script 01-03. Chỉ script 04 nạp năm này.
+Năm 2018 (test) bị cắt khỏi dữ liệu thô ở script 01-03 và 05. Chỉ script 04 và 06 nạp năm này, mỗi script đúng một lần.
 Output: `results/` (bảng, tham số, dự báo), `figures/` (hình). Trên Kaggle là `/kaggle/working/`.
 
 ## Chạy trên máy
@@ -37,6 +40,8 @@ kaggle datasets download -d nicholasjhana/energy-consumption-generation-prices-a
 # smoke test 03 và dry-run 04 (2017 đóng vai test, KHÔNG nạp 2018), output ra thư mục tạm:
 P4AIDS_SMOKE=1 P4AIDS_OUT=/tmp/p4aids_smoke .venv/bin/python scripts/03_lightgbm_tuning.py
 P4AIDS_SMOKE=1 P4AIDS_DRYRUN=1 P4AIDS_OUT=/tmp/p4aids_smoke .venv/bin/python scripts/04_test_and_analysis.py
+P4AIDS_SMOKE=1 P4AIDS_OUT=/tmp/p4aids_smoke .venv/bin/python scripts/05_ablation_tuning.py
+P4AIDS_SMOKE=1 P4AIDS_DRYRUN=1 P4AIDS_OUT=/tmp/p4aids_smoke .venv/bin/python scripts/06_test_ablation.py
 ```
 
 ## Chạy trên Kaggle
