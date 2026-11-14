@@ -185,6 +185,69 @@ misalignment in the source; we cannot tell which. We did not change the test dat
 check (decided after seeing the results, so only supporting evidence), removing September keeps
 all verdicts unchanged and widens the LightGBM gain to 275\,MW (actual) and 218\,MW (lagged).
 
+\subsection{Separating Fitting, Features and Structure}
+\label{sec:eval-ablation}
+
+\paragraph{Protocol and disclosure.} The variants of \cref{tab:variants} were added \emph{after} the
+test results above were known. Their configuration was chosen on validation only, frozen with
+SHA-256 hashes and committed, and only then was 2018 loaded a second time, in one run, for these
+models only. B0, B1 and M1 were not refitted, so all numbers above are unchanged. A first attempt of
+this run stopped at its precondition check before reading any data. On validation the verdicts are
+the same as in \cref{tab:ablation}, except that feature engineering for the global Ridge was
+undecided in the lagged setting. These results are therefore supporting evidence, weaker than the
+pre-registered comparison above.
+
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Paired comparisons on the test year for the added variants ($\Delta=\MAE_A-\MAE_B$ in MW,
+           95\% block-bootstrap interval). All verdicts are ``A clearly better'' unless noted.}
+  \label{tab:ablation}
+  \begin{tabular}{@{}l l r c r c@{}}
+    \toprule
+    & & \multicolumn{2}{c}{Actual} & \multicolumn{2}{c}{Lagged} \\
+    \cmidrule(lr){3-4}\cmidrule(l){5-6}
+    A & B & $\Delta$ & 95\% interval & $\Delta$ & 95\% interval \\
+    \midrule
+    \multicolumn{6}{@{}l}{\emph{Q1: fitting versus features}} \\
+    Ridge F0, 24 models & B0 & $-665$ & $[-916,\,-421]$ & $-668$ & $[-917,\,-422]$ \\
+    Ridge F1, 24 models (B1) & Ridge F0, 24 models & $-215$ & $[-298,\,-133]$ & $-204$ & $[-283,\,-130]$ \\
+    Ridge F1, global & Ridge F0, global & $-135$ & $[-209,\,-63]$ & $-116$ & $[-189,\,-50]$ \\
+    LightGBM F1, global (M1) & LightGBM F0, global & $-488$ & $[-617,\,-360]$ & $-430$ & $[-561,\,-302]$ \\
+    \addlinespace
+    \multicolumn{6}{@{}l}{\emph{Q2: LightGBM versus Ridge at matched features and structure}} \\
+    LightGBM F1, global & Ridge F1, global & $-457$ & $[-576,\,-331]$ & $-401$ & $[-512,\,-288]$ \\
+    LightGBM F1, 24 models & Ridge F1, 24 models & $-184$ & $[-284,\,-81]$ & $-167$ & $[-266,\,-64]$ \\
+    LightGBM F0, global & Ridge F0, global & $-104$ & $[-161,\,-43]$ & $-87$ & $[-146,\,-26]$ \\
+    \addlinespace
+    \multicolumn{6}{@{}l}{\emph{Structure: 24 per-hour models versus one global model}} \\
+    Ridge F1, 24 models & Ridge F1, global & $-226$ & $[-276,\,-177]$ & $-233$ & $[-284,\,-181]$ \\
+    LightGBM F1, 24 models & LightGBM F1, global & $+48$ & $[1,\,93]$ & $+2$ & $[-54,\,58]$ \\
+    \bottomrule
+  \end{tabular}
+  \par\smallskip\footnotesize Last row: B clearly better (actual), undecided (lagged).
+\end{table}
+
+\begin{itemize}
+  \item \textbf{Q1: most of the B0$\to$B1 gain comes from fitting.} Ridge on B0's own information
+        plus the calendar (F0) already removes 665--668\,MW. The engineered features remove a further
+        204--215\,MW. Of the 880\,MW gap between B0 and B1, about three quarters is therefore due to
+        fitting a model and one quarter to feature engineering. Both steps win in 12 of 12 months.
+  \item \textbf{Features help LightGBM more than Ridge} (430--488\,MW versus 116--215\,MW). We did
+        not test why. One plausible reason is that F1 adds information that is absent from F0
+        (holidays, the most recent load), and that trees can combine it with hour and weekday,
+        whereas Ridge can only add it linearly.
+  \item \textbf{Q2: LightGBM beats Ridge in every matched pair}, by 401--457\,MW with one model each,
+        167--184\,MW with 24 models each and 87--104\,MW on minimal features. The conclusion of
+        \cref{tab:test-pairs} thus does not depend on the difference in structure, but the size of
+        the gap does.
+  \item \textbf{Each model is strongest in its own structure.} Splitting Ridge into 24 models
+        removes about 230\,MW, because it is how a linear model gets hour-specific effects. Splitting
+        LightGBM does not help (+48\,MW actual, clearly worse; +2\,MW lagged, undecided), consistent
+        with each per-hour model seeing only 1/24 of the rows. The main comparison (B1 versus M1)
+        therefore pits each model in the structure that suits it.
+\end{itemize}
+
 \subsection{Why Models Win or Lose}
 \label{sec:eval-why}
 

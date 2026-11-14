@@ -37,3 +37,38 @@ The first validation run showed a bias of $-1.3\%$ of mean load in 2017. Our pla
 before seeing any result, stated that a bias of at least 1\% triggers a second target option. Both
 B1 and M1 can therefore predict either the level $y_{D,h}$ or the change since last week
 $y_{D,h}-y_{D-7,h}$, and the choice is made on validation like any other hyper-parameter.
+
+\paragraph{Additional variants (added after the first test run).}
+Feedback from the lecturer pointed out that B0$\to$B1 changes two things at once, fitting a model
+and engineering features, and that B1 (24 models) and M1 (one model) also differ in structure. We
+therefore added five variants (\cref{tab:variants}) so that each question is answered by a pair that
+differs in one thing only (\code{src/ablation.py}). \textbf{F0} is a minimal input set: hour, weekday,
+month, the raw temperature of the setting ($T_t$ or $T_{D-1,08}$) and $y_{D-7,h}$, i.e.\ the
+information B0 uses plus the calendar. It has no degree days, holidays, recent lags, morning ratio or
+cyclic encodings. One-hot coding of weekday and month is kept for Ridge, because a linear model needs
+it to use a category at all. \textbf{F1} is the full set of \cref{tab:features}. The global Ridge is
+one model with hour dummies and no hour interactions; the per-hour LightGBM is 24 models sharing one
+set of hyper-parameters, each with its own early stopping. All variants are tuned exactly like B1 and
+M1 (\cref{sec:tuning}). For the global Ridge the best $\alpha$ fell on the upper edge of the grid
+(one model on 24 times more rows needs a larger penalty), so the grid was extended by half decades,
+as our rule prescribes; the chosen value lies inside the extended grid.
+
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Model grid. Each variant exists in both weather settings.}
+  \label{tab:variants}
+  \begin{tabular}{@{}l l l l@{}}
+    \toprule
+    Model & Features & Structure & Status \\
+    \midrule
+    Ridge & F1 & 24 per-hour models & original B1 \\
+    LightGBM & F1 & one global model & original M1 \\
+    Ridge & F0 & 24 per-hour models & added \\
+    Ridge & F0 & one global model & added \\
+    Ridge & F1 & one global model & added \\
+    LightGBM & F0 & one global model & added \\
+    LightGBM & F1 & 24 per-hour models & added \\
+    \bottomrule
+  \end{tabular}
+\end{table}

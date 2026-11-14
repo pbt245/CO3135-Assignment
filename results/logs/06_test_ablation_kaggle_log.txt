@@ -1,0 +1,119 @@
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+ROOT: /kaggle/input/datasets/bathanhphan/p4aids-code | Kaggle: True | DRY RUN: False | evaluating on: test | output: /kaggle/working
+
+==============================================================================
+0. Preconditions
+==============================================================================
+10 frozen configurations match /kaggle/input/datasets/bathanhphan/p4aids-code/results/frozen_v2/SHA256SUMS
+
+==============================================================================
+1. Data and consistency with development data
+==============================================================================
+actual consistent with development data; {'test': 8756, 'train': 17332, 'val': 8757}
+lagged consistent with development data; {'test': 8756, 'train': 17332, 'val': 8757}
+
+==============================================================================
+2. Refit the new models on all data before the evaluation year and predict
+==============================================================================
+actual: fitted on 26089 rows, predicting 8756 rows
+lagged: fitted on 26089 rows, predicting 8756 rows
+
+==============================================================================
+3. Results on test
+==============================================================================
+
+--- test metrics, all models ---
+                            MAE     RMSE  MAPE_%    bias        n
+B0                     2,631.89 3,803.60    9.08   12.78 8,756.00
+ridge_hour_F0_actual   1,966.70 2,739.68    6.73 -429.37 8,756.00
+ridge_global_F0_actual 2,112.66 2,840.08    7.26 -390.77 8,756.00
+ridge_hour_F1_actual   1,751.80 2,510.24    5.95 -401.52 8,756.00
+ridge_global_F1_actual 1,977.90 2,691.53    6.77 -351.80 8,756.00
+lgbm_global_F0_actual  2,008.38 2,802.01    6.87 -471.44 8,756.00
+lgbm_global_F1_actual  1,520.53 2,285.53    5.18 -387.13 8,756.00
+lgbm_hour_F1_actual    1,568.27 2,284.34    5.34 -431.78 8,756.00
+ridge_hour_F0_lagged   1,963.89 2,742.29    6.72 -436.34 8,756.00
+ridge_global_F0_lagged 2,108.80 2,834.74    7.25 -375.20 8,756.00
+ridge_hour_F1_lagged   1,760.17 2,524.72    5.96 -445.42 8,756.00
+ridge_global_F1_lagged 1,992.73 2,714.12    6.82 -362.65 8,756.00
+lgbm_global_F0_lagged  2,022.09 2,772.72    6.93 -421.07 8,756.00
+lgbm_global_F1_lagged  1,591.81 2,315.50    5.42 -355.29 8,756.00
+lgbm_hour_F1_lagged    1,593.63 2,330.93    5.43 -400.40 8,756.00
+
+--- test MAE (MW) by model and weather setting ---
+                  actual   lagged
+ridge_hour_F0   1,967.00 1,964.00
+ridge_global_F0 2,113.00 2,109.00
+ridge_hour_F1   1,752.00 1,760.00
+ridge_global_F1 1,978.00 1,993.00
+lgbm_global_F0  2,008.00 2,022.00
+lgbm_global_F1  1,521.00 1,592.00
+lgbm_hour_F1    1,568.00 1,594.00
+
+--- paired comparisons (delta < 0: A better) ---
+   weather                                                 question    MAE_A    MAE_B   delta  ci_low  ci_high  delta_%load  threshold_MW months_A_better           verdict
+0   actual  Q1 fitting: Ridge on B0's information vs the fixed rule 1,966.70 2,631.89 -665.19 -915.89  -421.25        -2.29         52.64           12/12  A clearly better
+1   actual       Q1 features: engineered vs minimal, per-hour Ridge 1,751.80 1,966.70 -214.89 -298.33  -133.11        -0.74         39.33           12/12  A clearly better
+2   actual         Q1 features: engineered vs minimal, global Ridge 1,977.90 2,112.66 -134.76 -209.28   -63.07        -0.46         42.25           10/12  A clearly better
+3   actual             Q1 features: engineered vs minimal, LightGBM 1,520.53 2,008.38 -487.85 -617.46  -359.88        -1.68         40.17           12/12  A clearly better
+4   actual                             Q2 model: one model each, F1 1,520.53 1,977.90 -457.38 -576.28  -331.14        -1.57         39.56           11/12  A clearly better
+5   actual                             Q2 model: 24 models each, F1 1,568.27 1,751.80 -183.53 -284.26   -81.20        -0.63         35.04           11/12  A clearly better
+6   actual                             Q2 model: one model each, F0 2,008.38 2,112.66 -104.28 -161.35   -43.04        -0.36         42.25           12/12  A clearly better
+7   actual  Q2 original: each model in its own structure (M1 vs B1) 1,520.53 1,751.80 -231.28 -341.87  -119.18        -0.80         35.04           10/12  A clearly better
+8   actual                                structure: 24 vs 1, Ridge 1,751.80 1,977.90 -226.10 -275.72  -176.85        -0.78         39.56           12/12  A clearly better
+9   actual                             structure: 24 vs 1, LightGBM 1,568.27 1,520.53   47.75    0.80    93.45         0.16         30.41            3/12  B clearly better
+10  lagged  Q1 fitting: Ridge on B0's information vs the fixed rule 1,963.89 2,631.89 -668.00 -917.36  -422.32        -2.30         52.64           12/12  A clearly better
+11  lagged       Q1 features: engineered vs minimal, per-hour Ridge 1,760.17 1,963.89 -203.72 -283.24  -129.71        -0.70         39.28           12/12  A clearly better
+12  lagged         Q1 features: engineered vs minimal, global Ridge 1,992.73 2,108.80 -116.07 -188.67   -50.09        -0.40         42.18            9/12  A clearly better
+13  lagged             Q1 features: engineered vs minimal, LightGBM 1,591.81 2,022.09 -430.28 -561.47  -302.15        -1.48         40.44           11/12  A clearly better
+14  lagged                             Q2 model: one model each, F1 1,591.81 1,992.73 -400.92 -512.25  -287.67        -1.38         39.85           11/12  A clearly better
+15  lagged                             Q2 model: 24 models each, F1 1,593.63 1,760.17 -166.54 -266.36   -63.72        -0.57         35.20           10/12  A clearly better
+16  lagged                             Q2 model: one model each, F0 2,022.09 2,108.80  -86.71 -146.12   -26.06        -0.30         42.18           10/12  A clearly better
+17  lagged  Q2 original: each model in its own structure (M1 vs B1) 1,591.81 1,760.17 -168.36 -276.84   -55.83        -0.58         35.20           11/12  A clearly better
+18  lagged                                structure: 24 vs 1, Ridge 1,760.17 1,992.73 -232.55 -284.36  -180.88        -0.80         39.85           12/12  A clearly better
+19  lagged                             structure: 24 vs 1, LightGBM 1,593.63 1,591.81    1.82  -53.87    57.65         0.01         31.84            5/12         undecided
+
+--- mean |e_lgbm_global_F1| - |e_ridge_global_F1| (MW, negative = LightGBM better) ---
+                   actual  lagged
+day_type Saturday -306.00 -201.00
+         Sunday   -675.00 -527.00
+         bridge    477.00  349.00
+         holiday  -564.00 -613.00
+         workday  -456.00 -421.00
+T_band   <5       -584.00 -633.00
+         5-10     -734.00 -670.00
+         10-15    -462.00 -442.00
+         15-20    -265.00 -226.00
+         20-25    -305.00 -217.00
+         >25      -503.00 -374.00
+
+--- mean |e_lgbm_hour_F1| - |e_ridge_hour_F1| (MW, negative = LightGBM better) ---
+                   actual  lagged
+day_type Saturday  -50.00    9.00
+         Sunday   -370.00 -214.00
+         bridge    972.00  778.00
+         holiday  -146.00 -223.00
+         workday  -197.00 -209.00
+T_band   <5       -281.00 -262.00
+         5-10     -366.00 -348.00
+         10-15    -183.00 -156.00
+         15-20     -57.00  -28.00
+         20-25     -70.00  -58.00
+         >25      -232.00 -246.00
+
+saved results for test_ablation in /kaggle/working/results
+/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+  cells[i][c] = re.sub('\\\\\|', '|', cell)
+/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+  text = re.sub(r'_', '\_', text) # Escape underscores in display text
+[NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+[NbConvertApp] Writing 10704 bytes to __notebook__.ipynb
+[NbConvertApp] Converting notebook __notebook__.ipynb to html
+[NbConvertApp] Writing 280434 bytes to __results__.html

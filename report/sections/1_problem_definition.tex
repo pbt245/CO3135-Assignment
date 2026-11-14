@@ -23,9 +23,12 @@ Our target user is an analyst who only has public data and wants an open, explai
 user needs to know where to spend effort: on feature engineering, on a more complex model, or on
 obtaining weather forecasts. We therefore ask three questions:
 \begin{enumerate}[label=\textbf{Q\arabic*}, leftmargin=*]
-  \item How much error do lag, calendar, holiday and temperature features remove, using a linear model
-        (B1 Ridge versus the seasonal-naive B0)?
-  \item Does a non-linear model (M1 LightGBM, Light Gradient Boosting Machine) add accuracy once these features exist (M1 versus B1)?
+  \item How much error does a fitted linear model (B1 Ridge) remove compared with the seasonal-naive
+        B0, and how much of that comes from the engineered lag, calendar, holiday and temperature
+        features rather than from fitting a model at all?
+  \item Once these features exist, does a tree model (M1 LightGBM, Light Gradient Boosting Machine)
+        add accuracy over Ridge, also when both get the same inputs and the same structure (one model
+        for all hours, or one per hour)?
   \item How much is knowing the actual weather of day $D$ worth, compared with only past weather?
 \end{enumerate}
 

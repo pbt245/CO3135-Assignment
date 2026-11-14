@@ -9,15 +9,24 @@
 
 All answers below come from the single test run on 2018 and agree with validation 2017.
 
-\paragraph{Q1: feature engineering with a linear model.} Ridge with lags, calendar, holiday and
-degree-day features removes about a third of the seasonal-naive error (880\,MW, 3.0\% of mean load) in
-every month of the test year. This is by far the largest single gain in the study.
+\paragraph{Q1: fitting a model and engineering features.} The per-hour Ridge with engineered
+features has an 880\,MW (3.0\% of mean load) lower error than the seasonal-naive B0, in every month
+of the test year. The added variants split this gap: about three quarters (665--668\,MW) comes from
+fitting a Ridge on the information B0 already uses plus the calendar, and one quarter (204--215\,MW)
+from the engineered lag, holiday and temperature features (\cref{sec:eval-ablation}). We compared
+only the full and the minimal feature sets, so we cannot say how much each feature group adds. The
+same features are worth about twice as much to LightGBM (430--488\,MW).
 
-\paragraph{Q2: a non-linear model.} LightGBM removes a further 13\% of the Ridge error with actual
-weather (231\,MW) and 10\% with lagged weather (168\,MW), winning in 10--11 of 12 months. The gain is
-concentrated in cold and hot hours and in winter months, i.e.\ where the response to temperature
-and its interaction with calendar matter most. Ridge stays better on bridge days, and LightGBM lost
-September 2018, a month with unusual recorded load.
+\paragraph{Q2: LightGBM versus Ridge.} On the same features, LightGBM removes a further 13\% of the
+error of B1 with actual weather (231\,MW) and 10\% with lagged weather (168\,MW), winning in 10--11
+of 12 months. It also wins when both models have the same structure, with one model each or 24 each,
+and on minimal features, so the result does not hinge on the 24-versus-one difference. Two
+differences remain: Ridge receives degree days with a fixed base while LightGBM receives raw
+temperature, and the tuning budgets differ. The result is therefore about these tuned models on this
+data, not about linear versus non-linear models in general. The gain is largest in cold and hot hours
+and in winter months, which is consistent with, but does not prove, a more flexible temperature
+response. Ridge stays better on bridge days in every structure, and LightGBM lost September 2018, a
+month with unusual recorded load.
 
 \paragraph{Q3: knowing the actual weather.} With perfect knowledge of the day's temperature,
 LightGBM improves by 71\,MW (0.25\% of load); Ridge does not improve measurably. This is an upper
@@ -27,9 +36,11 @@ years (\cref{tab:s2}): once lags and calendar are present, same-day temperature 
 information. This does not mean temperature is unimportant. A plausible explanation, which we did not
 test, is that much of its effect is already carried by the season and by recent load.
 
-\paragraph{What this means for a public-data analyst.} Spend effort first on features (lags at the
-right information time, calendar, holidays), then on a flexible model; a weather-forecast feed comes
-last for a national day-ahead forecast of this kind. Holidays and bridge days remain the weakest
+\paragraph{What this means for a public-data analyst.} For this data and set-up, the largest and
+cheapest step is to fit a regression on recent load and the calendar instead of using a naive rule.
+Engineered features (lags at the right information time, holidays) and a flexible model come next,
+and they reinforce each other: the features are worth about twice as much to LightGBM as to Ridge.
+A weather-forecast feed comes last for a national day-ahead forecast of this kind. Holidays and bridge days remain the weakest
 point of every model and are the most promising place for further work. The TSO forecast is still
 far more accurate (268\,MW), so a public-data model is useful for understanding and analysis, not as
 a replacement.
@@ -60,6 +71,10 @@ a replacement.
         the 24-hour mean temperature at early hours of $D$ also uses the rest of $D-1$. The holiday
         table misses five national holidays that fell on a Sunday in 2015--2017 (none in 2018).
         The eight test comparisons are not corrected for multiple testing.
+  \item \textbf{Added comparisons:} the variants of \cref{sec:eval-ablation} were added after the
+        test results were known, and 2018 was loaded a second time for them. Their configuration was
+        frozen on validation first, but they remain supporting evidence. Feature groups were not
+        removed one at a time, so the value of each group is unknown.
   \item All relations are statistical associations, not causal effects.
 \end{itemize}
 

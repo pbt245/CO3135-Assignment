@@ -1,0 +1,12 @@
+,,actual,lagged
+day_type,Saturday,-50.0,9.0
+day_type,Sunday,-370.0,-214.0
+day_type,bridge,972.0,778.0
+day_type,holiday,-146.0,-223.0
+day_type,workday,-197.0,-209.0
+T_band,<5,-281.0,-262.0
+T_band,5-10,-366.0,-348.0
+T_band,10-15,-183.0,-156.0
+T_band,15-20,-57.0,-28.0
+T_band,20-25,-70.0,-58.0
+T_band,>25,-232.0,-246.0
