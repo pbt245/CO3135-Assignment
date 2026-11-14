@@ -1,0 +1,13 @@
+{
+  "mode": "lagged",
+  "target": "delta7",
+  "th": null,
+  "tc": null,
+  "alpha": 1.0,
+  "val_mae": 1999.9068033199817,
+  "th_on_grid_edge": false,
+  "tc_on_grid_edge": false,
+  "alpha_on_grid_edge": false,
+  "fset": "F0",
+  "per_hour": true
+}

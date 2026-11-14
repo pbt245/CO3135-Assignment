@@ -1,0 +1,111 @@
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+ROOT: /kaggle/input/datasets/bathanhphan/p4aids-code | Kaggle: True | smoke: False | output: /kaggle/working | lightgbm 4.6.0 | optuna 5.0.0
+
+==============================================================================
+0. Original models B0, B1, M1 on validation (rebuilt from results/frozen/)
+==============================================================================
+B1 and M1 identical to the saved validation predictions of script 03
+
+==============================================================================
+1. New Ridge variants: tuning on validation (same procedure as B1)
+==============================================================================
+ridge_hour_F0    actual target=delta7 th=None tc=None alpha=10 val MAE=1999.9
+ridge_hour_F0    lagged target=delta7 th=None tc=None alpha=1 val MAE=1999.9
+ridge_global_F0  actual target=delta7 th=None tc=None alpha=316 val MAE=2118.7
+ridge_global_F0  lagged target=delta7 th=None tc=None alpha=316 val MAE=2119.1
+ridge_global_F1  actual target=delta7 th=18.0 tc=18.0 alpha=1e+03 val MAE=2020.6
+ridge_global_F1  lagged target=delta7 th=18.0 tc=18.0 alpha=1e+03 val MAE=2036.8
+
+==============================================================================
+2. New LightGBM variants: Optuna, 30 trials each (same search space and seed as M1)
+==============================================================================
+lgbm_global_F0   actual target=delta7 {'num_leaves': 8, 'min_data_in_leaf': 37, 'feature_fraction': 0.8803233988716652, 'lambda_l2': 0.0023321684526404394} val MAE=1952.4 (29s)
+lgbm_global_F0   lagged target=level  {'num_leaves': 138, 'min_data_in_leaf': 279, 'feature_fraction': 0.9779557165058598, 'lambda_l2': 0.0057408674907065155} val MAE=2017.3 (25s)
+lgbm_hour_F1     actual target=level  {'num_leaves': 38, 'min_data_in_leaf': 11, 'feature_fraction': 0.6986974598041816, 'lambda_l2': 0.2366801927601775} val MAE=1662.0 (299s)
+lgbm_hour_F1     lagged target=level  {'num_leaves': 53, 'min_data_in_leaf': 10, 'feature_fraction': 0.8565734948953692, 'lambda_l2': 7.077300648368294} val MAE=1694.4 (287s)
+
+==============================================================================
+3. Validation comparison (test not touched)
+==============================================================================
+
+--- validation 2017 metrics, all models ---
+                            MAE     RMSE  MAPE_%    bias        n
+B0                     2,626.92 3,747.92    9.20   -2.10 8,757.00
+ridge_hour_F0_actual   1,999.89 2,760.85    6.96 -377.56 8,757.00
+ridge_global_F0_actual 2,118.69 2,825.96    7.41 -336.06 8,757.00
+ridge_hour_F1_actual   1,839.52 2,562.08    6.38 -357.56 8,757.00
+ridge_global_F1_actual 2,020.56 2,712.38    7.06 -292.04 8,757.00
+lgbm_global_F0_actual  1,952.43 2,705.55    6.81 -377.34 8,757.00
+lgbm_global_F1_actual  1,590.80 2,350.19    5.56 -316.44 8,757.00
+lgbm_hour_F1_actual    1,661.96 2,383.81    5.78 -364.15 8,757.00
+ridge_hour_F0_lagged   1,999.91 2,779.60    6.97 -353.38 8,757.00
+ridge_global_F0_lagged 2,119.05 2,831.10    7.43 -288.61 8,757.00
+ridge_hour_F1_lagged   1,858.75 2,594.28    6.44 -377.77 8,757.00
+ridge_global_F1_lagged 2,036.75 2,733.65    7.12 -270.59 8,757.00
+lgbm_global_F0_lagged  2,017.29 2,736.85    7.05 -359.09 8,757.00
+lgbm_global_F1_lagged  1,683.38 2,437.97    5.89 -265.76 8,757.00
+lgbm_hour_F1_lagged    1,694.43 2,446.05    5.90 -356.82 8,757.00
+
+--- validation MAE (MW) by model and weather setting ---
+                  actual   lagged
+ridge_hour_F0   2,000.00 2,000.00
+ridge_global_F0 2,119.00 2,119.00
+ridge_hour_F1   1,840.00 1,859.00
+ridge_global_F1 2,021.00 2,037.00
+lgbm_global_F0  1,952.00 2,017.00
+lgbm_global_F1  1,591.00 1,683.00
+lgbm_hour_F1    1,662.00 1,694.00
+
+--- paired comparisons on validation (delta < 0: A better) ---
+   weather                                                 question    MAE_A    MAE_B   delta  ci_low  ci_high  threshold_MW months_A_better           verdict
+0   actual  Q1 fitting: Ridge on B0's information vs the fixed rule 1,999.89 2,626.92 -627.03 -904.43  -334.02         52.54           11/12  A clearly better
+1   actual       Q1 features: engineered vs minimal, per-hour Ridge 1,839.52 1,999.89 -160.37 -253.27   -70.95         40.00            9/12  A clearly better
+2   actual         Q1 features: engineered vs minimal, global Ridge 2,020.56 2,118.69  -98.13 -188.38    -8.81         42.37            7/12  A clearly better
+3   actual             Q1 features: engineered vs minimal, LightGBM 1,590.80 1,952.43 -361.63 -494.24  -228.53         39.05           11/12  A clearly better
+4   actual                             Q2 model: one model each, F1 1,590.80 2,020.56 -429.77 -534.18  -310.40         40.41           12/12  A clearly better
+5   actual                             Q2 model: 24 models each, F1 1,661.96 1,839.52 -177.56 -269.01   -85.87         36.79           11/12  A clearly better
+6   actual                             Q2 model: one model each, F0 1,952.43 2,118.69 -166.26 -265.26   -68.35         42.37           11/12  A clearly better
+7   actual  Q2 original: each model in its own structure (M1 vs B1) 1,590.80 1,839.52 -248.73 -354.01  -134.12         36.79           12/12  A clearly better
+8   actual                                structure: 24 vs 1, Ridge 1,839.52 2,020.56 -181.04 -254.58  -102.97         40.41           11/12  A clearly better
+9   actual                             structure: 24 vs 1, LightGBM 1,661.96 1,590.80   71.16   14.69   124.83         31.82            1/12  B clearly better
+10  lagged  Q1 fitting: Ridge on B0's information vs the fixed rule 1,999.91 2,626.92 -627.01 -907.06  -329.22         52.54           11/12  A clearly better
+11  lagged       Q1 features: engineered vs minimal, per-hour Ridge 1,858.75 1,999.91 -141.16 -229.82   -52.41         40.00            8/12  A clearly better
+12  lagged         Q1 features: engineered vs minimal, global Ridge 2,036.75 2,119.05  -82.30 -168.84     3.21         42.38            7/12         undecided
+13  lagged             Q1 features: engineered vs minimal, LightGBM 1,683.38 2,017.29 -333.91 -448.93  -219.74         40.35           12/12  A clearly better
+14  lagged                             Q2 model: one model each, F1 1,683.38 2,036.75 -353.37 -450.80  -251.31         40.74           12/12  A clearly better
+15  lagged                             Q2 model: 24 models each, F1 1,694.43 1,858.75 -164.32 -253.33   -73.14         37.17           10/12  A clearly better
+16  lagged                             Q2 model: one model each, F0 2,017.29 2,119.05 -101.77 -177.57   -27.26         42.38           11/12  A clearly better
+17  lagged  Q2 original: each model in its own structure (M1 vs B1) 1,683.38 1,858.75 -175.37 -274.82   -71.23         37.17           10/12  A clearly better
+18  lagged                                structure: 24 vs 1, Ridge 1,858.75 2,036.75 -178.00 -262.32   -91.75         40.74           11/12  A clearly better
+19  lagged                             structure: 24 vs 1, LightGBM 1,694.43 1,683.38   11.05  -49.58    72.34         33.67            4/12         undecided
+
+==============================================================================
+4. Freeze the new configuration
+==============================================================================
+528310ec6eec093afd7237b91f65df70b335b0627b81c2f45afa09a8ebdafecc  lgbm_global_F0_actual.json
+4f55be3a7037634697087c44fb6d0f53f1a69b03735e62b6d01f08a363ca7c5c  lgbm_global_F0_lagged.json
+9f9c63adf307eb39e06c1792723ddb8d3f74bb1b049e811a9d1277c283dd6029  lgbm_hour_F1_actual.json
+438a1d36baa1e6f8c4ccba21fc35d57d3d43e25fcfb0e72a776360190e733b46  lgbm_hour_F1_lagged.json
+38dac78001d1a592ae7358468ddb66e10850a5322a896425be208e7091d84f40  ridge_global_F0_actual.json
+ca1a6f6a0e9e247cec362567c723b4081555f95d01a9db55425cb584904b4b3a  ridge_global_F0_lagged.json
+8a5296c6cc128d07b4d53c0a4a38420162718c61b731bb59178f1601f06341a1  ridge_global_F1_actual.json
+d3394b991de5def6898af23cf5b0ed2ec63dc4634f75d037baee2f6b7f5b7dc9  ridge_global_F1_lagged.json
+0640dbc6e7fd824a8a55e81ae65472438371bb96ad94a36ddf2d83e89c195b94  ridge_hour_F0_actual.json
+cd66a4e85e241251bd57a7227f808019ba2e40b5472e9edb18058a941ee8e564  ridge_hour_F0_lagged.json
+
+frozen in /kaggle/working/results/frozen_v2. Next: copy results/frozen_v2/ into the repo, commit it, then run script 06 ONCE.
+/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+  cells[i][c] = re.sub('\\\\\|', '|', cell)
+/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+  text = re.sub(r'_', '\_', text) # Escape underscores in display text
+[NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+[NbConvertApp] Writing 11551 bytes to __notebook__.ipynb
+[NbConvertApp] Converting notebook __notebook__.ipynb to html
+[NbConvertApp] Writing 281446 bytes to __results__.html

@@ -1,0 +1,13 @@
+{
+  "mode": "actual",
+  "target": "delta7",
+  "th": null,
+  "tc": null,
+  "alpha": 316.22776601683796,
+  "val_mae": 2118.690047513757,
+  "th_on_grid_edge": false,
+  "tc_on_grid_edge": false,
+  "alpha_on_grid_edge": false,
+  "fset": "F0",
+  "per_hour": false
+}

@@ -1,0 +1,26 @@
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+ROOT: /kaggle/input/datasets/bathanhphan/p4aids-code | Kaggle: True | DRY RUN: False | evaluating on: test | output: /kaggle/working
+
+==============================================================================
+0. Preconditions
+==============================================================================
+Traceback (most recent call last):
+  File "/kaggle/input/datasets/bathanhphan/p4aids-code/scripts/06_test_ablation.py", line 43, in <module>
+    assert manifest is not None, "frozen_v2/SHA256SUMS missing: run script 05 and commit results/frozen_v2/ first"
+           ^^^^^^^^^^^^^^^^^^^^
+AssertionError: frozen_v2/SHA256SUMS missing: run script 05 and commit results/frozen_v2/ first
+/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+  cells[i][c] = re.sub('\\\\\|', '|', cell)
+/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+  text = re.sub(r'_', '\_', text) # Escape underscores in display text
+[NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+[NbConvertApp] Writing 2902 bytes to __notebook__.ipynb
+[NbConvertApp] Converting notebook __notebook__.ipynb to html
+[NbConvertApp] Writing 273861 bytes to __results__.html
